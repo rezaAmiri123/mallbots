@@ -13,20 +13,20 @@ import (
 	"google.golang.org/grpc"
 )
 
-type GrpcHandler struct {
+type server struct {
 	customerspb.UnimplementedCustomersServiceServer
 	app application.App
 }
 
-var _ customerspb.CustomersServiceServer = (*GrpcHandler)(nil)
+var _ customerspb.CustomersServiceServer = (*server)(nil)
 
 func RegisterServer(app application.App, register grpc.ServiceRegistrar) {
-	customerspb.RegisterCustomersServiceServer(register, GrpcHandler{
+	customerspb.RegisterCustomersServiceServer(register, server{
 		app: app,
 	})
 }
 
-func (h GrpcHandler) RegisterCustomer(ctx context.Context, request *customerspb.RegisterCustomerRequest) (resp *customerspb.RegisterCustomerResponse, err error) {
+func (s server) RegisterCustomer(ctx context.Context, request *customerspb.RegisterCustomerRequest) (resp *customerspb.RegisterCustomerResponse, err error) {
 	span := trace.SpanFromContext(ctx)
 
 	id := uuid.New().String()
@@ -35,7 +35,7 @@ func (h GrpcHandler) RegisterCustomer(ctx context.Context, request *customerspb.
 		attribute.String("CustomerID", id),
 	)
 
-	err = h.app.RegisterCustomer(ctx, application.RegisterCustomer{
+	err = s.app.RegisterCustomer(ctx, application.RegisterCustomer{
 		ID:        id,
 		Name:      request.GetName(),
 		SmsNumber: request.GetSmsNumber(),
