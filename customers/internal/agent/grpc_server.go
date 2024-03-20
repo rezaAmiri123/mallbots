@@ -12,7 +12,7 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/rezaAmiri123/edatV2/di"
 	edatgrpc "github.com/rezaAmiri123/edatV2/grpc"
-	edatpgx "github.com/rezaAmiri123/edatV2/pgx"
+	// edatpgx "github.com/rezaAmiri123/edatV2/pgx"
 	edatlog "github.com/rezaAmiri123/edatV2/log"
 	"github.com/rs/zerolog"
 	"github.com/stackus/errors"
