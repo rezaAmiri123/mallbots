@@ -5,6 +5,7 @@ import (
 
 	"github.com/rezaAmiri123/edatV2/di"
 	"github.com/rezaAmiri123/mallbots/customers/internal/constants"
+	edatlog "github.com/rezaAmiri123/edatV2/log"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/propagation"
@@ -32,4 +33,11 @@ func (a *Agent) setupTracer() error {
 	})
 
 	return nil
+}
+func (a *Agent) cleanupTracer() error {
+	tp := a.container.Get(constants.TracerKey).(*sdktrace.TracerProvider)
+	logger := edatlog.DefaultLogger
+	if err := tp.Shutdown(context.Background()); err != nil {
+		logger.Error("ran into an issue shutting down the tracer provider", edatlog.Error(err))
+	}
 }

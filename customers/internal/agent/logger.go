@@ -15,6 +15,7 @@ func (a *Agent) setupLogger() error {
 	if err != nil {
 		return err
 	}
+
 	// edatlogger := zerologger.Logger(zlogger)
 	edatlog.DefaultLogger = zerologger.Logger(zlogger)
 	// logger.
