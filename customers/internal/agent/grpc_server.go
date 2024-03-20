@@ -16,11 +16,11 @@ import (
 	edatlog "github.com/rezaAmiri123/edatV2/log"
 	"github.com/rs/zerolog"
 	"github.com/stackus/errors"
-	// "go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
 	"google.golang.org/grpc/reflection"
-	_ "cloud.google.com/go/compute/metadata"
+	// _ "cloud.google.com/go/compute/metadata"
 )
 
 // Try go get cloud.google.com/go/compute/metadata and then go mod tidy
