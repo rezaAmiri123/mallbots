@@ -29,6 +29,7 @@ const (
 
 	TracerKey = "tracer"
 	LoggerKey = "logger"
+	GRPCServerKey = "GRPCServer"
 
 	CustomersRepoKey = "customersRepo"
 )

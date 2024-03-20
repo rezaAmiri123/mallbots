@@ -50,7 +50,11 @@ type WebCorsCfg struct {
 	AllowCredentials bool     `envconfig:"ALLOW_CREDENTIALS" default:"true"`
 	MaxAge           int      `envconfig:"MAX_AGE" default:"300"`
 }
-
+type MonitoringCfg struct{
+	LivenessAddress string `envconfig:"LIVENESS_ADDRESS" default:":8080"`
+	MetricAddress string`envconfig:"METRIC_ADDRESS" default:":8080"`
+	PproffAddress string `envconfig:"PPROFF_ADDRESS" default:":8080"`
+}
 type ServerCfg struct {
 	Network  string `envconfig:"NETWORK" default:"tcp"`
 	Address  string `envconfig:"ADDRESS" default:":8000"`

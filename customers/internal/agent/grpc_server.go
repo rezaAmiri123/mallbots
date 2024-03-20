@@ -9,11 +9,13 @@ import (
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
-	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/rezaAmiri123/edatV2/di"
+	"github.com/rezaAmiri123/mallbots/customers/internal/constants"
+	"github.com/rezaAmiri123/mallbots/customers/internal/handlers/grpcserver"
+
 	// edatgrpc "github.com/rezaAmiri123/edatV2/grpc"
 	// edatpgx "github.com/rezaAmiri123/edatV2/pgx"
-	edatlog "github.com/rezaAmiri123/edatV2/log"
+	// edatlog "github.com/rezaAmiri123/edatV2/log"
 	"github.com/rs/zerolog"
 	"github.com/stackus/errors"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
@@ -34,7 +36,7 @@ const (
 
 func (a *Agent) setupGrpcServer() error {
 	logger := a.container.Get(constants.LoggerKey).(zerolog.Logger)
-	poolConn := a.container.Get(constants.DatabaseKey).(*pgxpool.Pool)
+	// poolConn := a.container.Get(constants.DatabaseKey).(*pgxpool.Pool)
 	var opts []grpc.ServerOption
 	opts = append(opts,
 		grpc.KeepaliveParams(keepalive.ServerParameters{
@@ -44,24 +46,24 @@ func (a *Agent) setupGrpcServer() error {
 			Time:              gRPCTime * time.Minute,
 		}),
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
-			edatgrpc.RequestContextUnaryServerInterceptor,
+			// edatgrpc.RequestContextUnaryServerInterceptor,
 			WithServerUnaryEnsureStatus(),
-			edatgrpc.WithUnrayServerLogging(logger),
-			edatpgx.RpcSessionUnrayInterceptor(poolConn, edatlog.DefaultLogger),
+			// edatgrpc.WithUnrayServerLogging(logger),
+			// edatpgx.RpcSessionUnrayInterceptor(poolConn, edatlog.DefaultLogger),
 			grpc_ctxtags.UnaryServerInterceptor(),
 			////////grpc_opentracing.UnaryServerInterceptor(),
 			// otelgrpc.UnaryServerInterceptor(),
 			grpc_prometheus.UnaryServerInterceptor,
 			grpc_recovery.UnaryServerInterceptor(),
 		)),
-		// grpc.StatsHandler(otelgrpc.NewServerHandler()),
+		grpc.StatsHandler(otelgrpc.NewServerHandler()),
 	)
 
 	server := grpc.NewServer(opts...)
 	reflection.Register(server)
 	grpc_prometheus.Register(server)
-	app := a.container.Get(constants.ApplicationKey).(application.ServiceApplication)
-	grpcserver.RegisterServer(app, server)
+	// app := a.container.Get(constants.ApplicationKey).(application.App)
+	grpcserver.RegisterServerTx(a.container, server)
 
 	listener, err := net.Listen(a.config.Rpc.Network, a.config.Rpc.Address)
 	if err != nil {
