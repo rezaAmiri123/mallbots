@@ -1,13 +1,10 @@
 package agent
 
 import (
-	"context"
 	"io"
 	"sync"
 
 	"github.com/rezaAmiri123/edatV2/di"
-	"github.com/rezaAmiri123/mallbots/customers/internal/constants"
-	"go.opentelemetry.io/otel/sdk/trace"
 )
 
 
@@ -30,11 +27,12 @@ func NewAgent(config Config) (*Agent, error) {
 	setupsFn := []func() error{
 		a.setupLogger,
 		a.setupTracer,
-		a.setupRegistry,
-		a.setupDatabase,
-		a.setupEventServer,
-		a.setupApplication,
-		a.setupEventHandler,
+		a.setupMonitoring,
+		// a.setupRegistry,
+		// a.setupDatabase,
+		// a.setupEventServer,
+		// a.setupApplication,
+		// a.setupEventHandler,
 		a.setupGrpcServer,
 		//a.setupHttpServer,
 	}

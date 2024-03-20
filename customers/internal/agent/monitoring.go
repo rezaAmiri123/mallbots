@@ -1,7 +1,6 @@
 package agent
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 	_ "net/http/pprof"
@@ -10,30 +9,32 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	edatlog "github.com/rezaAmiri123/edatV2/log"
-	"github.com/rezaAmiri123/mallbots/customers/internal/constants"
 )
 
-func (a *Agent) setupHttpServer() error {
+func (a *Agent) setupMonitoring() error {
 	mux := chi.NewMux()
 	mux.Use(middleware.Heartbeat("/liveness"))
 	mux.Method("GET", "/metrics", promhttp.Handler())
 	//a.setupSwagger(mux)
 	webServer := &http.Server{
-		Addr:    fmt.Sprintf(":%d", a.config.ShutdownTimeout),
+		Addr:    fmt.Sprintf(":%d", a.config.Monitoring.Address),
 		Handler: mux,
 	}
-	a.container.AddSingleton(constants.HttpServerKey, func(c di.Container) (any, error) {
-		return webServer, nil
-	})
+	// a.container.AddSingleton(constants.HttpServerKey, func(c di.Container) (any, error) {
+	// 	return webServer, nil
+	// })
 	//a.httpServer = webServer
 	
 	go func() {
 		logger := edatlog.DefaultLogger
-		logger.Info("run http at %s", webServer.Addr)
+		logger.Info(fmt.Sprintf("run http at %s", a.config.Monitoring.Address))
 		err := webServer.ListenAndServe()
 		if err != nil {
 			_ = a.Shutdown()
 		}
+	}()
+	go func() {
+		http.ListenAndServe(a.config.Monitoring.PprofAddress, nil)
 	}()
 	return nil
 

@@ -16,8 +16,8 @@ type pgCfg struct {
 }
 
 type natsCfg struct {
-	URL            string        `envconfig:"URL"`
-	ClusterID      string        `envconfig:"CLUSTER_ID"`
+	URL       string `envconfig:"URL"`
+	ClusterID string `envconfig:"CLUSTER_ID"`
 	// Stream         string        `envconfig:"STREAM"`
 	AckWaitTimeout time.Duration `envconfig:"ACK_WAIT_TIMEOUT" default:"30s"`
 }
@@ -50,10 +50,9 @@ type WebCorsCfg struct {
 	AllowCredentials bool     `envconfig:"ALLOW_CREDENTIALS" default:"true"`
 	MaxAge           int      `envconfig:"MAX_AGE" default:"300"`
 }
-type MonitoringCfg struct{
-	LivenessAddress string `envconfig:"LIVENESS_ADDRESS" default:":8080"`
-	MetricAddress string`envconfig:"METRIC_ADDRESS" default:":8080"`
-	PproffAddress string `envconfig:"PPROFF_ADDRESS" default:":8080"`
+type MonitoringCfg struct {
+	Address      string `envconfig:"ADDRESS" default:":8080"`
+	PprofAddress string `envconfig:"PPROFF_ADDRESS" default:":6060"`
 }
 type ServerCfg struct {
 	Network  string `envconfig:"NETWORK" default:"tcp"`
@@ -82,6 +81,7 @@ type Config struct {
 	Environment     string        `envconfig:"ENVIRONMENT" default:"production"`
 	ServiceID       string        `envconfig:"SERVICE_ID" required:"true"`
 	LogLevel        edatlog.Level `envconfig:"LOG_LEVEL" default:"WARN" desc:"options: [TRACE,DEBUG,INFO,WARN,ERROR,PANIC]"`
+	Monitoring      MonitoringCfg `envconfig:"MONITORING"`
 	ShutdownTimeout time.Duration `envconfig:"SHUTDOWN_TIMEOUT" default:"30s" desc:"time to allow services to gracefully stop"`
 	Web             webCfg        `envconfig:"WEB"`        // Web Config
 	Rpc             ServerCfg     `envconfig:"RPC"`        // RPC Config
