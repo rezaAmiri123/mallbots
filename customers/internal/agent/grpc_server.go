@@ -12,6 +12,7 @@ import (
 	"github.com/rezaAmiri123/edatV2/di"
 	"github.com/rezaAmiri123/mallbots/customers/internal/constants"
 	"github.com/rezaAmiri123/mallbots/customers/internal/handlers/grpcserver"
+	edatlog "github.com/rezaAmiri123/edatV2/log"
 
 	// edatgrpc "github.com/rezaAmiri123/edatV2/grpc"
 	// edatpgx "github.com/rezaAmiri123/edatV2/pgx"
@@ -89,4 +90,13 @@ func WithServerUnaryEnsureStatus() grpc.UnaryServerInterceptor {
 		resp, err = handler(ctx, req)
 		return resp, errors.SendGRPCError(err)
 	}
+}
+
+func (a *Agent) cleanupGrpcServer() error {
+	server := a.container.Get(constants.GRPCServerKey).(*grpc.Server)
+	logger := edatlog.DefaultLogger
+	server.GracefulStop()
+	logger.Info("clean up grpc server")
+	return nil
+
 }

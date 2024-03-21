@@ -27,9 +27,10 @@ const (
 	CommandHandlersKey          = "commandHandlers"
 	ReplyHandlersKey            = "replyHandlers"
 
-	TracerKey = "tracer"
-	LoggerKey = "logger"
+	TracerKey     = "tracer"
+	LoggerKey     = "logger"
 	GRPCServerKey = "GRPCServer"
+	DatabaseKey   = "database"
 
 	CustomersRepoKey = "customersRepo"
 )

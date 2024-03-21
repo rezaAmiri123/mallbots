@@ -29,7 +29,7 @@ func NewAgent(config Config) (*Agent, error) {
 		a.setupTracer,
 		a.setupMonitoring,
 		// a.setupRegistry,
-		// a.setupDatabase,
+		a.setupDatabase,
 		// a.setupEventServer,
 		// a.setupApplication,
 		// a.setupEventHandler,
@@ -74,6 +74,8 @@ func (a *Agent) Shutdown() error {
 		//func() error {
 		//	return a.jaegerCloser.Close()
 		//},
+		a.cleanupGrpcServer,
+		a.cleanupDatabase,
 		a.cleanupTracer,
 	}
 	for _, fn := range shutdown {

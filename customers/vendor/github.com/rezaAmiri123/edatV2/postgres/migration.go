@@ -2,8 +2,9 @@ package postgres
 
 import (
 	"database/sql"
-	"github.com/pressly/goose/v3"
 	"io/fs"
+
+	"github.com/pressly/goose/v3"
 )
 
 func MigrateUp(db *sql.DB,fs fs.FS) error {
@@ -11,9 +12,11 @@ func MigrateUp(db *sql.DB,fs fs.FS) error {
 	if err := goose.SetDialect("postgres"); err != nil {
 		return err
 	}
+	
 	if err := goose.Up(db, "."); err != nil {
 		return err
 	}
+	
 	return nil
 }
 

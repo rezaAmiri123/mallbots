@@ -40,4 +40,5 @@ func (a *Agent) setupMonitoring() error {
 
 }
 
+// http://localhost:6060/debug/pprof/
 // go tool pprof -http localhost:8085 http://localhost:6060/debug/pprof/heap?debug=1
