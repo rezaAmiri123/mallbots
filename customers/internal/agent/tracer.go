@@ -40,4 +40,6 @@ func (a *Agent) cleanupTracer() error {
 	if err := tp.Shutdown(context.Background()); err != nil {
 		logger.Error("ran into an issue shutting down the tracer provider", edatlog.Error(err))
 	}
+	
+	return nil
 }

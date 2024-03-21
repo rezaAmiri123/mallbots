@@ -17,7 +17,7 @@ func (a *Agent) setupMonitoring() error {
 	mux.Method("GET", "/metrics", promhttp.Handler())
 	//a.setupSwagger(mux)
 	webServer := &http.Server{
-		Addr:    fmt.Sprintf(":%d", a.config.Monitoring.Address),
+		Addr:    fmt.Sprintf("%s", a.config.Monitoring.Address),
 		Handler: mux,
 	}
 	// a.container.AddSingleton(constants.HttpServerKey, func(c di.Container) (any, error) {
@@ -39,3 +39,5 @@ func (a *Agent) setupMonitoring() error {
 	return nil
 
 }
+
+// go tool pprof -http localhost:8085 http://localhost:6060/debug/pprof/heap?debug=1
