@@ -29,6 +29,7 @@ func (a *Agent) setupDatabase() error {
 	if err = postgres.MigrateUp(db, migrations.FS); err != nil {
 		return err
 	}
+	postgres.EventStore
 
 	a.container.AddSingleton(constants.DatabaseTransactionKey, func(c di.Container) (any, error) {
 		return dbConn, nil
