@@ -14,7 +14,7 @@ import (
 	"github.com/rezaAmiri123/mallbots/customers/internal/handlers/grpcserver"
 	edatlog "github.com/rezaAmiri123/edatV2/log"
 
-	// edatgrpc "github.com/rezaAmiri123/edatV2/grpc"
+	edatgrpc "github.com/rezaAmiri123/edatV2/grpc"
 	// edatpgx "github.com/rezaAmiri123/edatV2/pgx"
 	// edatlog "github.com/rezaAmiri123/edatV2/log"
 	"github.com/rs/zerolog"
@@ -47,9 +47,9 @@ func (a *Agent) setupGrpcServer() error {
 			Time:              gRPCTime * time.Minute,
 		}),
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
-			// edatgrpc.RequestContextUnaryServerInterceptor,
+			edatgrpc.RequestContextUnaryServerInterceptor,
 			WithServerUnaryEnsureStatus(),
-			// edatgrpc.WithUnrayServerLogging(logger),
+			edatgrpc.WithUnrayServerLogging(logger),
 			// edatpgx.RpcSessionUnrayInterceptor(poolConn, edatlog.DefaultLogger),
 			grpc_ctxtags.UnaryServerInterceptor(),
 			////////grpc_opentracing.UnaryServerInterceptor(),
