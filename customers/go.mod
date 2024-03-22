@@ -2,7 +2,7 @@ module github.com/rezaAmiri123/mallbots/customers
 
 go 1.20
 
-replace github.com/rezaAmiri123/edatV2 => github.com/rezaAmiri123/edatV2 v1.0.1
+replace github.com/rezaAmiri123/edatV2 => github.com/rezaAmiri123/edatV2 v1.0.2
 
 require (
 	github.com/bojand/ghz v0.117.0
