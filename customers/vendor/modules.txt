@@ -121,6 +121,7 @@ github.com/pressly/goose/v3/lock
 ## explicit; go 1.13
 github.com/prometheus/client_golang/prometheus
 github.com/prometheus/client_golang/prometheus/internal
+github.com/prometheus/client_golang/prometheus/promauto
 github.com/prometheus/client_golang/prometheus/promhttp
 # github.com/prometheus/client_model v0.4.0
 ## explicit; go 1.18
@@ -147,6 +148,7 @@ github.com/rezaAmiri123/edatV2/grpc
 github.com/rezaAmiri123/edatV2/log
 github.com/rezaAmiri123/edatV2/log/zerologger
 github.com/rezaAmiri123/edatV2/postgres
+github.com/rezaAmiri123/edatV2/postgresotel
 github.com/rezaAmiri123/edatV2/registry
 github.com/rezaAmiri123/edatV2/tm
 # github.com/rs/zerolog v1.32.0
