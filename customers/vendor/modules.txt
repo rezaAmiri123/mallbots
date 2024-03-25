@@ -150,6 +150,7 @@ github.com/rezaAmiri123/edatV2/log/zerologger
 github.com/rezaAmiri123/edatV2/postgres
 github.com/rezaAmiri123/edatV2/postgresotel
 github.com/rezaAmiri123/edatV2/registry
+github.com/rezaAmiri123/edatV2/registry/serdes
 github.com/rezaAmiri123/edatV2/tm
 # github.com/rs/zerolog v1.32.0
 ## explicit; go 1.15
