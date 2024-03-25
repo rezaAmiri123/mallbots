@@ -30,9 +30,18 @@ func (s serverTx) RegisterCustomer(ctx context.Context, request *customerspb.Reg
 		err = s.closeTx(tx, err)
 	}(di.Get(ctx, constants.DatabaseTransactionKey).(*sql.Tx))
 
-	next := server{app: di.Get(ctx, constants.ApplicationKey).(application.App)}
+	next := server{app: di.Get(ctx, constants.ApplicationTxKey).(application.App)}
+	
+	// next := server{app: di.Get(ctx, constants.ApplicationKey).(application.App)}
 
 	return next.RegisterCustomer(ctx, request)
+}
+
+func (s serverTx) GetCustomer(ctx context.Context, request *customerspb.GetCustomerRequest) (resp *customerspb.GetCustomerResponse, err error) {
+	ctx = s.c.Scoped(ctx)
+	next := server{app: di.Get(ctx, constants.ApplicationKey).(application.App)}
+
+	return next.GetCustomer(ctx, request)
 }
 
 func (s serverTx) closeTx(tx *sql.Tx, err error) error {

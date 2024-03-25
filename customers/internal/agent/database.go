@@ -20,6 +20,10 @@ func (a *Agent) setupDatabase() error {
 	if err := db.Ping(); err != nil {
 		return fmt.Errorf("cannot ping db: %w", err)
 	}
+
+	db.SetMaxIdleConns(10)
+
+	fmt.Println("connction pool size: ", db.Stats().Idle)
 	if err = postgres.MigrateUp(db, migrations.FS); err != nil {
 		return err
 	}

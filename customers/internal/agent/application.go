@@ -11,7 +11,6 @@ import (
 	"github.com/rezaAmiri123/mallbots/customers/internal/adapters"
 	"github.com/rezaAmiri123/mallbots/customers/internal/application"
 	"github.com/rezaAmiri123/mallbots/customers/internal/constants"
-	"github.com/rezaAmiri123/mallbots/customers/internal/domain"
 )
 
 func (a *Agent) setupApplication() error {
@@ -32,12 +31,31 @@ func (a *Agent) setupApplication() error {
 	})
 
 	// setup application
-	a.container.AddScoped(constants.ApplicationKey, func(c di.Container) (any, error) {
+	a.container.AddScoped(constants.ApplicationTxKey, func(c di.Container) (any, error) {
+		customerRepo := adapters.NewPostgresCustomerRepository(
+			constants.CustomersTableName,
+			postgresotel.Trace(c.Get(constants.DatabaseTransactionKey).(*sql.Tx)),
+		)
 		return application.NewInstrumentedApp(application.NewApplication(
-			c.Get(constants.CustomersRepoKey).(domain.CustomerRepository),
+			customerRepo,
+			c.Get(constants.DomainDispatcherKey).(*ddd.EventDispatcher[ddd.AggregateEvent]),
+		), customersRegistered), nil
+	})
+	// setup application
+	a.container.AddSingleton(constants.ApplicationKey, func(c di.Container) (any, error) {
+		customerRepo := adapters.NewPostgresCustomerRepository(
+			constants.CustomersTableName,
+			postgresotel.Trace(c.Get(constants.DatabaseKey).(*sql.DB)),
+		)
+		return application.NewInstrumentedApp(application.NewApplication(
+			customerRepo,
 			c.Get(constants.DomainDispatcherKey).(*ddd.EventDispatcher[ddd.AggregateEvent]),
 		), customersRegistered), nil
 	})
 
+	return nil
+}
+
+func (a *Agent) cleanupApplication() error {
 	return nil
 }

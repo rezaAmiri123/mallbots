@@ -21,16 +21,17 @@ const (
 	ReplyPublisherKey           = "replyPublisher"
 	SagaStoreKey                = "sagaStore"
 	InboxStoreKey               = "inboxStore"
-	ApplicationKey              = "app"
 	DomainEventHandlersKey      = "domainEventHandlers"
 	IntegrationEventHandlersKey = "integrationEventHandlers"
 	CommandHandlersKey          = "commandHandlers"
 	ReplyHandlersKey            = "replyHandlers"
 
-	TracerKey     = "tracer"
-	LoggerKey     = "logger"
-	GRPCServerKey = "GRPCServer"
-	DatabaseKey   = "database"
+	TracerKey        = "tracer"
+	LoggerKey        = "logger"
+	GRPCServerKey    = "GRPCServer"
+	DatabaseKey      = "database"
+	ApplicationTxKey = "appTx"
+	ApplicationKey   = "app"
 
 	CustomersRepoKey = "customersRepo"
 )

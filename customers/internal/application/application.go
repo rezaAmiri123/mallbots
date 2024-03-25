@@ -13,11 +13,15 @@ type (
 		Name      string
 		SmsNumber string
 	}
+	GetCustomer struct {
+		ID string
+	}
 )
 
 type (
 	App interface {
 		RegisterCustomer(ctx context.Context, register RegisterCustomer) error
+		GetCustomer(ctx context.Context, get GetCustomer) (*domain.Customer, error)
 	}
 
 	Application struct {
@@ -54,4 +58,8 @@ func (a Application) RegisterCustomer(ctx context.Context, register RegisterCust
 	}
 
 	return nil
+}
+
+func (a Application) GetCustomer(ctx context.Context, get GetCustomer) (*domain.Customer, error) {
+	return a.customers.Find(ctx, get.ID)
 }

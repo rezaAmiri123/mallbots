@@ -7,6 +7,7 @@ import (
 	"github.com/rezaAmiri123/edatV2/errorsotel"
 	"github.com/rezaAmiri123/mallbots/customers/customerspb"
 	"github.com/rezaAmiri123/mallbots/customers/internal/application"
+	"github.com/rezaAmiri123/mallbots/customers/internal/domain"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
@@ -50,4 +51,35 @@ func (s server) RegisterCustomer(ctx context.Context, request *customerspb.Regis
 	}
 
 	return resp, nil
+}
+
+func (s server) GetCustomer(ctx context.Context, request *customerspb.GetCustomerRequest) (resp *customerspb.GetCustomerResponse, err error) {
+	span := trace.SpanFromContext(ctx)
+
+	span.SetAttributes(
+		attribute.String("CustomerID", request.GetId()),
+	)
+
+	customer, err := s.app.GetCustomer(ctx, application.GetCustomer{
+		ID: request.GetId(),
+	})
+	if err != nil {
+		span.RecordError(err, trace.WithAttributes(errorsotel.ErrAttrs(err)...))
+		span.SetStatus(codes.Error, err.Error())
+	}
+
+	resp = &customerspb.GetCustomerResponse{
+		Customer: s.customerToProto(customer),
+	}
+
+	return resp, nil
+}
+
+func (s server) customerToProto(customer *domain.Customer) *customerspb.Customer {
+	return &customerspb.Customer{
+		Id:        customer.ID(),
+		Name:      customer.Name,
+		SmsNumber: customer.SmsNumber,
+		Enabled:   customer.Enabled,
+	}
 }
