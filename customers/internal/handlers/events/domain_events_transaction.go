@@ -8,7 +8,7 @@ import (
 	"github.com/rezaAmiri123/mallbots/customers/internal/constants"
 )
 
-func RegisterDomainEventHandlerTx(container di.Container) {
+func RegisterDomainEventHandlersTx(container di.Container) {
 	handler := ddd.EventHandlerFunc[ddd.AggregateEvent](func(ctx context.Context, event ddd.AggregateEvent) error {
 		domainHandlers := di.Get(ctx, constants.DomainEventHandlersKey).(ddd.EventHandler[ddd.AggregateEvent])
 

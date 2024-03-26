@@ -1,14 +1,13 @@
 package agent
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/nats-io/nats.go"
 	"github.com/rezaAmiri123/edatV2/am"
 	"github.com/rezaAmiri123/edatV2/di"
 	"github.com/rezaAmiri123/edatV2/stream/jetstream"
-	amserializer "github.com/rezaAmiri123/edatV2/stream/jetstream/serializer"
+	jsserializer "github.com/rezaAmiri123/edatV2/stream/jetstream/serializer"
 	"github.com/rezaAmiri123/mallbots/customers/internal/constants"
 )
 
@@ -54,7 +53,7 @@ func (a *Agent) getNatsStream() (am.MessageStream, error) {
 
 	switch a.config.SerdeType {
 	default:
-		serializer = amserializer.NewJsonSerializer()
+		serializer = jsserializer.NewJsonSerializer()
 	}
 
 	stream := jetstream.NewStream(a.config.Nats.Stream, js, serializer)

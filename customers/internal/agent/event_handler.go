@@ -5,15 +5,18 @@ import (
 	"database/sql"
 
 	"github.com/rezaAmiri123/edatV2/am"
+	amserializer "github.com/rezaAmiri123/edatV2/am/serializer"
 	"github.com/rezaAmiri123/edatV2/amotel"
 	"github.com/rezaAmiri123/edatV2/amprom"
 	"github.com/rezaAmiri123/edatV2/di"
+	edatlog "github.com/rezaAmiri123/edatV2/log"
 	"github.com/rezaAmiri123/edatV2/postgres"
 	"github.com/rezaAmiri123/edatV2/postgresotel"
+	"github.com/rezaAmiri123/edatV2/registry"
 	"github.com/rezaAmiri123/edatV2/tm"
 	"github.com/rezaAmiri123/mallbots/customers/internal/constants"
+	"github.com/rezaAmiri123/mallbots/customers/internal/handlers/events"
 )
-
 
 func (a *Agent) setupEventHandler() (err error) {
 	sentCounter := amprom.SentMessagesCounter(constants.ServiceName)
@@ -28,9 +31,11 @@ func (a *Agent) setupEventHandler() (err error) {
 		), nil
 	})
 
+	
 	a.container.AddScoped(constants.EventPublisherKey, func(c di.Container) (any, error) {
 		return am.NewEventPublisher(
 			c.Get(constants.RegistryKey).(registry.Registry),
+			a.getAMSerializer(),
 			c.Get(constants.MessagePublisherKey).(am.MessagePublisher),
 		), nil
 	})
@@ -43,23 +48,30 @@ func (a *Agent) setupEventHandler() (err error) {
 	a.container.AddScoped(constants.DomainEventHandlersKey, func(c di.Container) (any, error) {
 		return events.NewDomainEventHandlers(c.Get(constants.EventPublisherKey).(am.EventPublisher)), nil
 	})
+	events.RegisterDomainEventHandlersTx(a.container)
 
-	app := a.container.Get(constants.ApplicationKey).(application.ServiceApplication)
-	subscriber := a.container.Get(constants.MessageSubscriberKey).(*msg.Subscriber)
-	
-	orderEventHandler := events.NewOrderEventHandlers(app)
-	orderEventHandler.Mount(subscriber)
-
-	orderCommandHandler := events.NewOrderEventHandlers(app)
-	orderCommandHandler.Mount(subscriber)
-
-	go func(){
-		subscriber.Start(context.Background())
+	go func() {
+		outboxProcessor := tm.NewOutboxProcessor(
+			a.container.Get(constants.StreamKey).(am.MessageStream),
+			postgres.NewOutboxStore(
+				constants.OutboxTableName,
+				a.container.Get(constants.DatabaseTransactionKey).(*sql.Tx),
+			),
+		)
+		// TODO make a gracefull shutdown
+		err := outboxProcessor.Start(context.Background())
+		logger := edatlog.DefaultLogger
+		if err != nil {
+			logger.Error("customers outbox processor encountered an error", edatlog.Error(err))
+		}
 	}()
 
-	a.container.AddScoped(constants.CommandHandlersKey, func(c di.Container) (any, error) {
-		return orderCommandHandler, nil
-	})
-
 	return nil
+}
+
+func(a *Agent)getAMSerializer()am.MessageSerializer{
+	switch a.config.SerdeType{
+	default:
+		return amserializer.NewJsonSerializer()
+	}
 }
