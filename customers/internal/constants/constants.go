@@ -32,6 +32,7 @@ const (
 	DatabaseKey      = "database"
 	ApplicationTxKey = "appTx"
 	ApplicationKey   = "app"
+	StreamKey        = "stream"
 
 	CustomersRepoKey = "customersRepo"
 )

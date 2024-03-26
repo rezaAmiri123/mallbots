@@ -18,7 +18,7 @@ type pgCfg struct {
 type natsCfg struct {
 	URL       string `envconfig:"URL"`
 	ClusterID string `envconfig:"CLUSTER_ID"`
-	// Stream         string        `envconfig:"STREAM"`
+	Stream         string        `envconfig:"STREAM" default:"mallbots"`
 	AckWaitTimeout time.Duration `envconfig:"ACK_WAIT_TIMEOUT" default:"30s"`
 }
 
@@ -81,6 +81,8 @@ type Config struct {
 	Environment     string        `envconfig:"ENVIRONMENT" default:"production"`
 	ServiceID       string        `envconfig:"SERVICE_ID" required:"true"`
 	LogLevel        edatlog.Level `envconfig:"LOG_LEVEL" default:"WARN" desc:"options: [TRACE,DEBUG,INFO,WARN,ERROR,PANIC]"`
+	SerdeType       string        `envconfig:"SERDE_TYPE" default:"json"`
+	StreamType      string        `envconfig:"STREAM_TYPE"`
 	Monitoring      MonitoringCfg `envconfig:"MONITORING"`
 	ShutdownTimeout time.Duration `envconfig:"SHUTDOWN_TIMEOUT" default:"30s" desc:"time to allow services to gracefully stop"`
 	Web             webCfg        `envconfig:"WEB"`        // Web Config

@@ -6,10 +6,10 @@ import (
 
 	"github.com/rezaAmiri123/edatV2/am"
 	"github.com/rezaAmiri123/edatV2/ddd"
+	"github.com/rezaAmiri123/edatV2/errorsotel"
 	"github.com/rezaAmiri123/mallbots/customers/customerspb"
 	"github.com/rezaAmiri123/mallbots/customers/internal/domain"
-	"github.com/rezaAmiri123/mallbots/customers/vendor/github.com/rezaAmiri123/edatV2/errorsotel"
-	"github.com/rezaAmiri123/mallbots/customers/vendor/go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 )
 
@@ -49,7 +49,7 @@ func (h domainHandlers[T]) HandleEvent(ctx context.Context, event T) (err error)
 		attribute.String("Event", event.EventName()),
 	))
 
-	switch event.EventName(){
+	switch event.EventName() {
 	case domain.CustomerRegisteredEvent:
 		return h.onCustomerRegistered(ctx, event)
 	}
@@ -57,8 +57,14 @@ func (h domainHandlers[T]) HandleEvent(ctx context.Context, event T) (err error)
 	return nil
 }
 
-func (h domainHandlers[T])onCustomerRegistered(ctx context.Context, evt ddd.AggregateEvent)(err error){
-	payload := evt.Payload().(*domain.CustomerRegistered)
+func (h domainHandlers[T]) onCustomerRegistered(ctx context.Context, aggregateEvent ddd.AggregateEvent) (err error) {
+	payload := aggregateEvent.Payload().(*domain.CustomerRegistered)
 
-	event := ddd.NewEvent(customerspb.CustomerRegistered,)
+	event := ddd.NewEvent(customerspb.CustomerRegisteredEvent, &customerspb.CustomerRegistered{
+		Id:        payload.Customer.ID(),
+		Name:      payload.Customer.Name,
+		SmsNumber: payload.Customer.SmsNumber,
+	})
+
+	return h.publisher.Publish(ctx, customerspb.CustomerAggregateChannel, event)
 }

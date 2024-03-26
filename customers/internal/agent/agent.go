@@ -28,7 +28,7 @@ func NewAgent(config Config) (*Agent, error) {
 		a.setupLogger,
 		a.setupTracer,
 		a.setupMonitoring,
-		// a.setupRegistry,
+		a.setupRegistry,
 		a.setupDatabase,
 		// a.setupEventServer,
 		a.setupApplication,
