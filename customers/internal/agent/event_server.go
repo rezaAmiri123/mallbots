@@ -20,7 +20,7 @@ func (a *Agent) setupEventServer() (err error) {
 			return err
 		}
 	default:
-		return fmt.Errorf("event server typeis unknown")
+		return fmt.Errorf("event server type is unknown")
 	}
 
 	a.container.AddSingleton(constants.StreamKey, func(c di.Container) (any, error) {

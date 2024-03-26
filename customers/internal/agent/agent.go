@@ -30,9 +30,9 @@ func NewAgent(config Config) (*Agent, error) {
 		a.setupMonitoring,
 		a.setupRegistry,
 		a.setupDatabase,
-		// a.setupEventServer,
+		a.setupEventServer,
 		a.setupApplication,
-		// a.setupEventHandler,
+		a.setupEventHandler,
 		a.setupGrpcServer,
 		//a.setupHttpServer,
 	}

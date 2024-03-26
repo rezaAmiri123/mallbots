@@ -31,12 +31,11 @@ func (a *Agent) setupEventHandler() (err error) {
 		), nil
 	})
 
-	
 	a.container.AddScoped(constants.EventPublisherKey, func(c di.Container) (any, error) {
 		return am.NewEventPublisher(
 			c.Get(constants.RegistryKey).(registry.Registry),
-			a.getAMSerializer(),
 			c.Get(constants.MessagePublisherKey).(am.MessagePublisher),
+			a.getAMSerializer(),
 		), nil
 	})
 
@@ -69,8 +68,8 @@ func (a *Agent) setupEventHandler() (err error) {
 	return nil
 }
 
-func(a *Agent)getAMSerializer()am.MessageSerializer{
-	switch a.config.SerdeType{
+func (a *Agent) getAMSerializer() am.MessageSerializer {
+	switch a.config.SerdeType {
 	default:
 		return amserializer.NewJsonSerializer()
 	}

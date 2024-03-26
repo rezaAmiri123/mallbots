@@ -121,5 +121,8 @@ func (s OutboxStore) MarkPublished(ctx context.Context, ids ...string) error {
 func (s OutboxStore) table(query string, args ...any) string {
 	params := []any{s.tableName}
 	params = append(params, args...)
-	return fmt.Sprintf(query, args...)
+	query= fmt.Sprintf(query, params...)
+	fmt.Println("tableName", s.tableName)
+	fmt.Println(query)
+	return query
 }

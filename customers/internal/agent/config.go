@@ -16,8 +16,8 @@ type pgCfg struct {
 }
 
 type natsCfg struct {
-	URL       string `envconfig:"URL"`
-	ClusterID string `envconfig:"CLUSTER_ID"`
+	URL            string        `envconfig:"URL"`
+	ClusterID      string        `envconfig:"CLUSTER_ID"`
 	Stream         string        `envconfig:"STREAM" default:"mallbots"`
 	AckWaitTimeout time.Duration `envconfig:"ACK_WAIT_TIMEOUT" default:"30s"`
 }
