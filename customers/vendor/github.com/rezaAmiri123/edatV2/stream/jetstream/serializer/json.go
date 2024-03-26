@@ -1,4 +1,4 @@
-package amserializer
+package jsserializer
 
 import (
 	"encoding/json"
