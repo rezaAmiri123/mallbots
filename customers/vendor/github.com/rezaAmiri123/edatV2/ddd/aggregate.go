@@ -67,7 +67,7 @@ func (e aggregateEvent) AggregateVersion() int { return e.metadata.Get(Aggregate
 func (a aggregate) AggregateName() string     { return a.EntityName() }
 func (a *aggregate) ClearEvents()             { a.events = []AggregateEvent{} }
 func (a *aggregate) Events() []AggregateEvent { return a.events }
-func (a aggregate) AddEvent(name string, payload EventPayload, options ...EventOption) {
+func (a *aggregate) AddEvent(name string, payload EventPayload, options ...EventOption) {
 	options = append(options, Metadata{
 		AggregateIDKey:   a.ID(),
 		AggregateNameKey: a.EntityName(),
