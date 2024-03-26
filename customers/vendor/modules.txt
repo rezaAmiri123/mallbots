@@ -151,7 +151,7 @@ github.com/prometheus/common/model
 github.com/prometheus/procfs
 github.com/prometheus/procfs/internal/fs
 github.com/prometheus/procfs/internal/util
-# github.com/rezaAmiri123/edatV2 v0.0.0-20240318080932-090a77e06b18 => github.com/rezaAmiri123/edatV2 v1.0.3
+# github.com/rezaAmiri123/edatV2 v0.0.0-20240318080932-090a77e06b18 => github.com/rezaAmiri123/edatV2 v1.0.4
 ## explicit; go 1.20
 github.com/rezaAmiri123/edatV2/am
 github.com/rezaAmiri123/edatV2/am/serializer
@@ -405,4 +405,4 @@ google.golang.org/protobuf/types/known/wrapperspb
 # gopkg.in/yaml.v3 v3.0.1
 ## explicit
 gopkg.in/yaml.v3
-# github.com/rezaAmiri123/edatV2 => github.com/rezaAmiri123/edatV2 v1.0.3
+# github.com/rezaAmiri123/edatV2 => github.com/rezaAmiri123/edatV2 v1.0.4
