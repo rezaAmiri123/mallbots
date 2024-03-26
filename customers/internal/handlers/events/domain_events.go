@@ -7,6 +7,7 @@ import (
 	"github.com/rezaAmiri123/edatV2/am"
 	"github.com/rezaAmiri123/edatV2/ddd"
 	"github.com/rezaAmiri123/edatV2/errorsotel"
+	edatlog "github.com/rezaAmiri123/edatV2/log"
 	"github.com/rezaAmiri123/mallbots/customers/customerspb"
 	"github.com/rezaAmiri123/mallbots/customers/internal/domain"
 	"go.opentelemetry.io/otel/attribute"
@@ -15,6 +16,7 @@ import (
 
 type domainHandlers[T ddd.AggregateEvent] struct {
 	publisher am.EventPublisher
+	logger edatlog.Logger
 }
 
 var _ ddd.EventHandler[ddd.AggregateEvent] = (*domainHandlers[ddd.AggregateEvent])(nil)
@@ -22,6 +24,7 @@ var _ ddd.EventHandler[ddd.AggregateEvent] = (*domainHandlers[ddd.AggregateEvent
 func NewDomainEventHandlers(publisher am.EventPublisher) domainHandlers[ddd.AggregateEvent] {
 	return domainHandlers[ddd.AggregateEvent]{
 		publisher: publisher,
+		logger: edatlog.DefaultLogger,
 	}
 }
 
@@ -29,6 +32,8 @@ func RegisterDomainEventHandlers(subscriber ddd.EventSubscriber[ddd.AggregateEve
 	subscriber.Subscribe(handlers,
 		domain.CustomerRegisteredEvent,
 	)
+	logger := edatlog.DefaultLogger
+	logger.Debug("registered domain event handler")
 }
 
 func (h domainHandlers[T]) HandleEvent(ctx context.Context, event T) (err error) {
@@ -48,12 +53,13 @@ func (h domainHandlers[T]) HandleEvent(ctx context.Context, event T) (err error)
 	span.AddEvent("Handling domain event", trace.WithAttributes(
 		attribute.String("Event", event.EventName()),
 	))
-
+	
+	h.logger.Debug("handled event: ", edatlog.String("EventName", event.EventName()))
 	switch event.EventName() {
 	case domain.CustomerRegisteredEvent:
 		return h.onCustomerRegistered(ctx, event)
 	}
-
+	
 	return nil
 }
 
