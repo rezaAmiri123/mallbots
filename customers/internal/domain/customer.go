@@ -1,8 +1,6 @@
 package domain
 
 import (
-	"fmt"
-
 	"github.com/rezaAmiri123/edatV2/ddd"
 	"github.com/stackus/errors"
 )
@@ -49,8 +47,6 @@ func RegisterCustomer(id, name, smsNumber string) (*Customer, error) {
 	customer.AddEvent(CustomerRegisteredEvent, &CustomerRegistered{
 		Customer: customer,
 	})
-	fmt.Println(customer.Aggregate.Events())
-	fmt.Println("customer.Events(): ",customer.Events())
 
 	return customer, nil
 }
