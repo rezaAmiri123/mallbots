@@ -1,6 +1,6 @@
 module github.com/rezaAmiri123/mallbots/customers
 
-go 1.22
+go 1.21
 
 replace github.com/rezaAmiri123/edatV2 => github.com/rezaAmiri123/edatV2 v1.0.5
 
