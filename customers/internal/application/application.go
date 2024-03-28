@@ -2,7 +2,6 @@ package application
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/rezaAmiri123/edatV2/ddd"
 	"github.com/rezaAmiri123/mallbots/customers/internal/domain"
@@ -54,7 +53,6 @@ func (a Application) RegisterCustomer(ctx context.Context, register RegisterCust
 	}
 
 	// publish domain events
-	fmt.Println(customer.Events())
 	if err = a.domainPublisher.Publish(ctx, customer.Events()...); err != nil {
 		return err
 	}
