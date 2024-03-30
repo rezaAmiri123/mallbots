@@ -9,3 +9,6 @@ DB_NAME=customers
 
 SERVICE=customers
 REPO_NAME=reza879
+
+test-integration:
+	go test -tags integration -v ./...
