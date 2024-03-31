@@ -1,11 +1,11 @@
 package domain
 
-const (
-	CustomerRegisteredEvent = "customers.CustomerRegistered"
-)
+// const (
+// 	CustomerRegisteredEvent = "customers.CustomerRegistered"
+// )
 
-type (
-	CustomerRegistered struct{ Customer *Customer }
-)
+// type (
+// 	CustomerRegistered struct{ Customer *Customer }
+// )
 
-func (CustomerRegistered) Key() string { return CustomerRegisteredEvent }
+// func (CustomerRegistered) Key() string { return CustomerRegisteredEvent }
