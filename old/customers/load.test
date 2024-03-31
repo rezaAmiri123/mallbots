@@ -1,0 +1,5 @@
+ghz -c 100 -n 1000  --insecure --proto customerspb/customer_api.proto --call customerspb.CustomersService.RegisterCustomer -d '{"name":"name", "sms_number":"sms_number"}' 0000:8000
+
+ghz -c 100 -n 1000  --insecure --proto customerspb/customer_api.proto --call customerspb.CustomersService.GetCustomer -d '{"id":"76b54ef0-5737-4062-9748-d53b81400ace"}' 0000:8000
+
+

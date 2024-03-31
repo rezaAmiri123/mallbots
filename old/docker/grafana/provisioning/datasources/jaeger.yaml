@@ -1,0 +1,9 @@
+apiVersion: 1
+
+datasources:
+  - name: Jaeger
+    uid: webstore-traces
+    type: jaeger
+    url: http://microservice_jaeger:8081
+    editable: true
+    isDefault: false

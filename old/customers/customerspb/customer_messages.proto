@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package customerspb;
+
+option go_package = "github.com/rezaAmiri123/mallbots/customers/customerspb;customerspb";
+
+// events
+message CustomerRegistered {
+    string id = 1;
+    string name = 2;
+    string sms_number = 3;
+  }
+  
