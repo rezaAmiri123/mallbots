@@ -15,6 +15,7 @@ require (
 	github.com/nats-io/nats.go v1.34.0
 	github.com/pressly/goose/v3 v3.19.2
 	github.com/prometheus/client_golang v1.19.0
+	github.com/rezaAmiri123/edatV2 v0.0.0-00010101000000-000000000000
 	github.com/rs/zerolog v1.32.0
 	github.com/stackus/dotenv v0.0.0-20221206033122-02295762494b
 	github.com/stackus/errors v0.1.5
