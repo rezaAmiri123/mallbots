@@ -9,25 +9,24 @@ import (
 	"net/http"
 	"time"
 
-	// "github.com/go-chi/chi/v5"
-	// "github.com/go-chi/chi/v5/middleware"
-	// "github.com/nats-io/nats.go"
-	// "github.com/pressly/goose/v3"
-	// "github.com/prometheus/client_golang/prometheus/promhttp"
-	// "github.com/rs/zerolog"
-	// "github.com/stackus/errors"
-	// "go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
-	// "go.opentelemetry.io/otel"
-	// "go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
-	// "go.opentelemetry.io/otel/propagation"
-	// sdktrace "go.opentelemetry.io/otel/sdk/trace"
-	// "golang.org/x/sync/errgroup"
-	// "google.golang.org/grpc"
-	// "google.golang.org/grpc/reflection"
-
+	"github.com/rs/zerolog"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/nats-io/nats.go"
+	"github.com/pressly/goose/v3"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/stackus/errors"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
+	"go.opentelemetry.io/otel/propagation"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	"golang.org/x/sync/errgroup"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	// "github.com/rezaAmiri123/mallbots/internal/config"
 	// "github.com/rezaAmiri123/mallbots/internal/logger"
-	// "github.com/rezaAmiri123/mallbots/internal/waiter"
+	"github.com/rezaAmiri123/edatV2/waiter"
 )
 
 type System struct {
@@ -170,13 +169,13 @@ func (s *System) RPC() *grpc.Server {
 	return s.rpc
 }
 
-func (s *System) initWaiter() {
-	s.waiter = waiter.New(waiter.CatchSignals())
-}
+// func (s *System) initWaiter() {
+// 	s.waiter = waiter.New(waiter.CatchSignals())
+// }
 
-func (s *System) Waiter() waiter.Waiter {
-	return s.waiter
-}
+// func (s *System) Waiter() waiter.Waiter {
+// 	return s.waiter
+// }
 
 func (s *System) WaitForWeb(ctx context.Context) error {
 	webServer := &http.Server{

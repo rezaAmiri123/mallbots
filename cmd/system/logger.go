@@ -1,36 +1,20 @@
 package system
 
 import (
-	"github.com/rezaAmiri123/edatV2/di"
 	"github.com/rezaAmiri123/edatV2/log"
 	"github.com/rezaAmiri123/edatV2/log/zerologger"
 )
 
-func (a *Agent) setupLogger() error {
+func (s *System) setupLogger() error {
 	zlogger, err := zerologger.NewZeroLogger(edatlog.Config{
-		Environment: a.config.Environment,
-		LogLevel:    a.config.LogLevel,
+		Environment: s.cfg.Environment,
+		LogLevel:    edatlog.Level(s.cfg.LogLevel),
 	})
 	if err != nil {
 		return err
 	}
-
-	// edatlogger := zerologger.Logger(zlogger)
 	edatlog.DefaultLogger = zerologger.Logger(zlogger)
-	// logger.
-	// logger, err := logging.NewZeroLogger(logging.Config{
-	// 	Environment: a.config.Environment,
-	// 	LogLevel:    a.config.LogLevel,
-	// })
-	// if err != nil {
-	// 	return err
-	// }
-
-	// log.DefaultLogger = zerologto.Logger(logger)
-	a.container.AddSingleton(constants.LoggerKey, func(c di.Container) (any, error) {
-		return zlogger, nil
-	})
-
+	s.logger = zlogger
 	return nil
 }
 

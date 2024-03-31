@@ -2,7 +2,7 @@ module github.com/rezaAmiri123/mallbots
 
 go 1.21
 
-replace github.com/rezaAmiri123/edatV2 => github.com/rezaAmiri123/edatV2 v1.0.5
+replace github.com/rezaAmiri123/edatV2 => github.com/rezaAmiri123/edatV2 v1.0.6
 
 require (
 	github.com/go-chi/chi/v5 v5.0.12
