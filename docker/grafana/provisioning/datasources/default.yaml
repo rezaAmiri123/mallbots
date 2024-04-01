@@ -4,6 +4,6 @@ datasources:
   - name: Prometheus
     uid: webstore-metrics
     type: prometheus
-    url: http://microservice_prometheus:9090
+    url: http://prometheus:9090
     editable: true
     isDefault: true

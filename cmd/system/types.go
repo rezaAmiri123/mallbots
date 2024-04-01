@@ -1,10 +1,14 @@
 package system
 
-import "context"
+import (
+	"context"
+
+	"github.com/rezaAmiri123/mallbots/internal/config"
+)
 
 
 type Service interface {
-	AppConfig
+	config.AppConfig
 	DB
 	JS
 	Mux
