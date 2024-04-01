@@ -12,6 +12,7 @@ require (
 	github.com/jackc/pgerrcode v0.0.0-20240316143900-6e2875d9b438
 	github.com/jackc/pgtype v1.14.3
 	github.com/jackc/pgx/v4 v4.18.2
+	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/nats-io/nats.go v1.34.0
 	github.com/pressly/goose/v3 v3.19.2
