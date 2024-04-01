@@ -19,7 +19,6 @@ require (
 	github.com/prometheus/client_golang v1.19.0
 	github.com/rezaAmiri123/edatV2 v0.0.0-00010101000000-000000000000
 	github.com/rs/zerolog v1.32.0
-	github.com/stackus/dotenv v0.0.0-20221206033122-02295762494b
 	github.com/stackus/errors v0.1.5
 	github.com/stretchr/testify v1.9.0
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.49.0
