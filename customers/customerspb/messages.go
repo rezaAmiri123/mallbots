@@ -1,8 +1,8 @@
 package customerspb
 
 import (
-	"github.com/rezaAmiri123/mallbots/internal/registry"
-	"github.com/rezaAmiri123/mallbots/internal/registry/serdes"
+	"github.com/rezaAmiri123/edatV2/registry"
+	"github.com/rezaAmiri123/edatV2/registry/serdes"
 )
 
 const (

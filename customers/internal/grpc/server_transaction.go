@@ -4,10 +4,10 @@ import (
 	"context"
 	"database/sql"
 
+	"github.com/rezaAmiri123/edatV2/di"
 	"github.com/rezaAmiri123/mallbots/customers/customerspb"
 	"github.com/rezaAmiri123/mallbots/customers/internal/application"
 	"github.com/rezaAmiri123/mallbots/customers/internal/constants"
-	"github.com/rezaAmiri123/mallbots/internal/di"
 	"google.golang.org/grpc"
 )
 

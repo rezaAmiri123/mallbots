@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/rezaAmiri123/mallbots/customers/internal/domain"
-	"github.com/rezaAmiri123/mallbots/internal/ddd"
+	"github.com/rezaAmiri123/edatV2/ddd"
 )
 
 type (

@@ -2,7 +2,9 @@ package customers
 
 import (
 	"context"
+	"database/sql"
 
+	jsserializer "github.com/rezaAmiri123/edatV2/stream/jetstream/serializer"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/rezaAmiri123/edatV2/am"
@@ -19,6 +21,8 @@ import (
 	"github.com/rezaAmiri123/mallbots/customers/customerspb"
 	"github.com/rezaAmiri123/mallbots/customers/internal/application"
 	"github.com/rezaAmiri123/mallbots/customers/internal/constants"
+	"github.com/rezaAmiri123/mallbots/customers/internal/domain"
+	"github.com/rezaAmiri123/mallbots/customers/internal/grpc"
 	"github.com/rs/zerolog"
 )
 
@@ -35,12 +39,13 @@ func Root(ctx context.Context, svc system.Service) (err error) {
 	container := di.New()
 	// setup Driven adapters
 	container.AddSingleton(constants.RegistryKey, func(c di.Container) (any, error) {
-		reg := registry.New()
+		reg := registry.NewRegistry()
 		if err := customerspb.Registrations(reg); err != nil {
 			return nil, err
 		}
 		return reg, nil
 	})
+	jsserializer
 	stream := jetstream.NewStream(svc.Config().Nats.Stream, svc.JS(), svc.Logger())
 	container.AddSingleton(constants.DomainDispatcherKey, func(c di.Container) (any, error) {
 		return ddd.NewEventDispatcher[ddd.AggregateEvent](), nil
@@ -69,7 +74,7 @@ func Root(ctx context.Context, svc system.Service) (err error) {
 		return am.NewMessageSubscriber(
 			stream,
 			amotel.OtelMessageContextExtractor(),
-			amprom.ReceivedMessagesCounter(constants.ServiceName),
+			amprom.ReceivedMessageCounter(constants.ServiceName),
 		), nil
 	})
 	container.AddScoped(constants.EventPublisherKey, func(c di.Container) (any, error) {
