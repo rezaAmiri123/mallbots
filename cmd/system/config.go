@@ -5,6 +5,10 @@ import (
 	"time"
 )
 
+type AppConfig interface{
+	Config() Config
+}
+
 type CleanupFiles func(ctx context.Context) error
 
 var envFiles []string

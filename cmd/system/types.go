@@ -1,26 +1,16 @@
 package system
 
-import (
-	"context"
-	"database/sql"
+import "context"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/nats-io/nats.go"
-	"github.com/rs/zerolog"
-	"google.golang.org/grpc"
-
-	"github.com/rezaAmiri123/mallbots/internal/config"
-	"github.com/rezaAmiri123/mallbots/internal/waiter"
-)
 
 type Service interface {
-	Config() config.AppConfig
-	DB() *sql.DB
-	JS() nats.JetStreamContext
-	Mux() *chi.Mux
-	RPC() *grpc.Server
-	Waiter() waiter.Waiter
-	Logger() zerolog.Logger
+	AppConfig
+	DB
+	JS
+	Mux
+	RPC
+	Logger
+	Waiter
 }
 
 type Module interface {
