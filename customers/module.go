@@ -7,7 +7,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/rezaAmiri123/edatV2/am"
-	amserializer"github.com/rezaAmiri123/edatV2/am/seralizer"
+	amserializer"github.com/rezaAmiri123/edatV2/am/serializer"
 	"github.com/rezaAmiri123/edatV2/amotel"
 	"github.com/rezaAmiri123/edatV2/amprom"
 	"github.com/rezaAmiri123/edatV2/ddd"
