@@ -145,6 +145,7 @@ github.com/rezaAmiri123/edatV2/amotel
 github.com/rezaAmiri123/edatV2/amprom
 github.com/rezaAmiri123/edatV2/ddd
 github.com/rezaAmiri123/edatV2/di
+github.com/rezaAmiri123/edatV2/errorsotel
 github.com/rezaAmiri123/edatV2/es
 github.com/rezaAmiri123/edatV2/log
 github.com/rezaAmiri123/edatV2/log/zerologger
