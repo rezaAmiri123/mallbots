@@ -4,10 +4,10 @@ import (
 	"context"
 	"database/sql"
 
-	jsserializer "github.com/rezaAmiri123/edatV2/stream/jetstream/serializer"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/rezaAmiri123/edatV2/am"
+	amserializer"github.com/rezaAmiri123/edatV2/am/seralizer"
 	"github.com/rezaAmiri123/edatV2/amotel"
 	"github.com/rezaAmiri123/edatV2/amprom"
 	"github.com/rezaAmiri123/edatV2/ddd"
@@ -16,9 +16,11 @@ import (
 	"github.com/rezaAmiri123/edatV2/postgresotel"
 	"github.com/rezaAmiri123/edatV2/registry"
 	"github.com/rezaAmiri123/edatV2/stream/jetstream"
+	jsserializer "github.com/rezaAmiri123/edatV2/stream/jetstream/serializer"
 	"github.com/rezaAmiri123/edatV2/tm"
 	"github.com/rezaAmiri123/mallbots/cmd/system"
 	"github.com/rezaAmiri123/mallbots/customers/customerspb"
+	"github.com/rezaAmiri123/mallbots/customers/internal/adapters"
 	"github.com/rezaAmiri123/mallbots/customers/internal/application"
 	"github.com/rezaAmiri123/mallbots/customers/internal/constants"
 	"github.com/rezaAmiri123/mallbots/customers/internal/domain"
@@ -36,6 +38,7 @@ func (m Module) Startup(ctx context.Context, mono system.Service) (err error) {
 }
 
 func Root(ctx context.Context, svc system.Service) (err error) {
+	cfg := svc.Config()
 	container := di.New()
 	// setup Driven adapters
 	container.AddSingleton(constants.RegistryKey, func(c di.Container) (any, error) {
@@ -45,8 +48,8 @@ func Root(ctx context.Context, svc system.Service) (err error) {
 		}
 		return reg, nil
 	})
-	jsserializer
-	stream := jetstream.NewStream(svc.Config().Nats.Stream, svc.JS(), svc.Logger())
+	
+	stream := jetstream.NewStream(cfg.Nats.Stream, svc.JS(),jsserializer.NewJsonSerializer())
 	container.AddSingleton(constants.DomainDispatcherKey, func(c di.Container) (any, error) {
 		return ddd.NewEventDispatcher[ddd.AggregateEvent](), nil
 	})
@@ -54,7 +57,7 @@ func Root(ctx context.Context, svc system.Service) (err error) {
 		return svc.DB().Begin()
 	})
 	container.AddScoped(constants.CustomersRepoKey, func(c di.Container) (any, error) {
-		return postgres.NewCustomerRepository(
+		return adapters.NewPostgresCustomerRepository(
 			constants.CustomersTableName,
 			postgresotel.Trace(c.Get(constants.DatabaseTransactionKey).(*sql.Tx)),
 		), nil

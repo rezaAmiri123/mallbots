@@ -1,4 +1,4 @@
-package postgres
+package adapters
 
 import (
 	"context"
@@ -8,21 +8,21 @@ import (
 	"github.com/rezaAmiri123/mallbots/internal/postgres"
 )
 
-type CustomerRepository struct {
+type PostgresCustomerRepository struct {
 	tableName string
 	db        postgres.DB
 }
 
-var _ domain.CustomerRepository = (*CustomerRepository)(nil)
+var _ domain.CustomerRepository = (*PostgresCustomerRepository)(nil)
 
-func NewCustomerRepository(tableName string, db postgres.DB) CustomerRepository {
-	return CustomerRepository{
+func NewPostgresCustomerRepository(tableName string, db postgres.DB) PostgresCustomerRepository {
+	return PostgresCustomerRepository{
 		tableName: tableName,
 		db:        db,
 	}
 }
 
-func (r CustomerRepository) Find(ctx context.Context, customerID string) (*domain.Customer, error) {
+func (r PostgresCustomerRepository) Find(ctx context.Context, customerID string) (*domain.Customer, error) {
 	const query = "SELECT name, sms_number, enabled FROM %s WHERE id = $1 LIMIT 1"
 
 	customer := domain.NewCustomer(customerID)
@@ -32,7 +32,7 @@ func (r CustomerRepository) Find(ctx context.Context, customerID string) (*domai
 	return customer, err
 }
 
-func (r CustomerRepository) Save(ctx context.Context, customer *domain.Customer) error {
+func (r PostgresCustomerRepository) Save(ctx context.Context, customer *domain.Customer) error {
 	const query = "INSERT INTO %s (id, NAME, sms_number, enabled) VALUES ($1, $2, $3, $4)"
 
 	_, err := r.db.ExecContext(ctx, r.table(query), customer.ID(), customer.Name, customer.SmsNumber, customer.Enabled)
@@ -40,7 +40,7 @@ func (r CustomerRepository) Save(ctx context.Context, customer *domain.Customer)
 	return err
 }
 
-func (r CustomerRepository) Update(ctx context.Context, customer *domain.Customer) error {
+func (r PostgresCustomerRepository) Update(ctx context.Context, customer *domain.Customer) error {
 	const query = "UPDATE %s SET NAME = $2, sms_number = $3, enabled = $4 WHERE id = $1"
 
 	_, err := r.db.ExecContext(ctx, r.table(query), customer.ID(), customer.Name, customer.SmsNumber, customer.Enabled)
@@ -48,6 +48,6 @@ func (r CustomerRepository) Update(ctx context.Context, customer *domain.Custome
 	return err
 }
 
-func (r CustomerRepository) table(query string) string {
+func (r PostgresCustomerRepository) table(query string) string {
 	return fmt.Sprintf(query, r.tableName)
 }
