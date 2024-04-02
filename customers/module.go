@@ -84,11 +84,13 @@ func Root(ctx context.Context, svc system.Service) (err error) {
 		return am.NewEventPublisher(
 			c.Get(constants.RegistryKey).(registry.Registry),
 			c.Get(constants.MessagePublisherKey).(am.MessagePublisher),
+			amserializer.NewJsonSerializer(),
 		), nil
 	})
 	container.AddScoped(constants.ReplyPublisherKey, func(c di.Container) (any, error) {
 		return am.NewReplyPublisher(
 			c.Get(constants.RegistryKey).(registry.Registry),
+			amserializer.NewJsonSerializer(),
 			c.Get(constants.MessagePublisherKey).(am.MessagePublisher),
 		), nil
 	})
