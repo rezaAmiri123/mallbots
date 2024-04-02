@@ -24,7 +24,6 @@ import (
 	"github.com/rezaAmiri123/mallbots/customers/internal/application"
 	"github.com/rezaAmiri123/mallbots/customers/internal/constants"
 	"github.com/rezaAmiri123/mallbots/customers/internal/domain"
-	"github.com/rezaAmiri123/mallbots/customers/internal/grpc"
 	"github.com/rs/zerolog"
 )
 
