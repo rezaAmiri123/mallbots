@@ -6,10 +6,10 @@ import (
 
 	"github.com/rezaAmiri123/edatV2/am"
 	"github.com/rezaAmiri123/edatV2/ddd"
+	"github.com/rezaAmiri123/edatV2/errorsotel"
 	"github.com/rezaAmiri123/edatV2/registry"
 	"github.com/rezaAmiri123/mallbots/customers/customerspb"
 	"github.com/rezaAmiri123/mallbots/customers/internal/application"
-	"github.com/rezaAmiri123/edatV2/errorsotel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 )
@@ -18,8 +18,8 @@ type commandHandlers struct {
 	app application.App
 }
 
-func NewCommandHandlers(reg registry.Registry, app application.App, replyPublisher am.ReplyPublisher, mws ...am.MessageHandlerMiddleware) am.MessageHandler {
-	return am.NewCommandHandler(reg, replyPublisher, commandHandlers{
+func NewCommandHandlers(reg registry.Registry, app application.App, replyPublisher am.ReplyPublisher, amSerializer am.MessageSerializer, mws ...am.MessageHandlerMiddleware) am.MessageHandler {
+	return am.NewCommandHandler(reg, amSerializer, replyPublisher, commandHandlers{
 		app: app,
 	}, mws...)
 }

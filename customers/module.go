@@ -3,11 +3,12 @@ package customers
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/rezaAmiri123/edatV2/am"
-	amserializer"github.com/rezaAmiri123/edatV2/am/serializer"
+	amserializer "github.com/rezaAmiri123/edatV2/am/serializer"
 	"github.com/rezaAmiri123/edatV2/amotel"
 	"github.com/rezaAmiri123/edatV2/amprom"
 	"github.com/rezaAmiri123/edatV2/ddd"
@@ -24,6 +25,8 @@ import (
 	"github.com/rezaAmiri123/mallbots/customers/internal/application"
 	"github.com/rezaAmiri123/mallbots/customers/internal/constants"
 	"github.com/rezaAmiri123/mallbots/customers/internal/domain"
+	"github.com/rezaAmiri123/mallbots/customers/internal/handlers/events"
+	"github.com/rezaAmiri123/mallbots/customers/internal/handlers/grpcserver"
 	"github.com/rs/zerolog"
 )
 
@@ -37,7 +40,9 @@ func (m Module) Startup(ctx context.Context, mono system.Service) (err error) {
 }
 
 func Root(ctx context.Context, svc system.Service) (err error) {
+	fmt.Println("****************"," customer root is running")
 	cfg := svc.Config()
+	amSerializer := amserializer.NewJsonSerializer()
 	container := di.New()
 	// setup Driven adapters
 	container.AddSingleton(constants.RegistryKey, func(c di.Container) (any, error) {
@@ -83,13 +88,13 @@ func Root(ctx context.Context, svc system.Service) (err error) {
 		return am.NewEventPublisher(
 			c.Get(constants.RegistryKey).(registry.Registry),
 			c.Get(constants.MessagePublisherKey).(am.MessagePublisher),
-			amserializer.NewJsonSerializer(),
+			amSerializer,
 		), nil
 	})
 	container.AddScoped(constants.ReplyPublisherKey, func(c di.Container) (any, error) {
 		return am.NewReplyPublisher(
 			c.Get(constants.RegistryKey).(registry.Registry),
-			amserializer.NewJsonSerializer(),
+			amSerializer,
 			c.Get(constants.MessagePublisherKey).(am.MessagePublisher),
 		), nil
 	})
@@ -110,13 +115,14 @@ func Root(ctx context.Context, svc system.Service) (err error) {
 		), customersRegistered), nil
 	})
 	container.AddScoped(constants.DomainEventHandlersKey, func(c di.Container) (any, error) {
-		return handlers.NewDomainEventHandlers(c.Get(constants.EventPublisherKey).(am.EventPublisher)), nil
+		return events.NewDomainEventHandlers(c.Get(constants.EventPublisherKey).(am.EventPublisher)), nil
 	})
 	container.AddScoped(constants.CommandHandlersKey, func(c di.Container) (any, error) {
-		return handlers.NewCommandHandlers(
+		return events.NewCommandHandlers(
 			c.Get(constants.RegistryKey).(registry.Registry),
 			c.Get(constants.ApplicationKey).(application.App),
 			c.Get(constants.ReplyPublisherKey).(am.ReplyPublisher),
+			amSerializer,
 			tm.InboxHandler(c.Get(constants.InboxStoreKey).(tm.InboxStore)),
 		), nil
 	})
@@ -126,7 +132,7 @@ func Root(ctx context.Context, svc system.Service) (err error) {
 	)
 
 	// setup Driver adapters
-	if err = grpc.RegisterServerTx(container, svc.RPC()); err != nil {
+	if err = grpcserver.RegisterServerTx(container, svc.RPC()); err != nil {
 		return err
 	}
 	// if err = rest.RegisterGateway(ctx, svc.Mux(), svc.Config().Rpc.Address()); err != nil {
@@ -135,8 +141,8 @@ func Root(ctx context.Context, svc system.Service) (err error) {
 	// if err = rest.RegisterSwagger(svc.Mux()); err != nil {
 	// 	return err
 	// }
-	handlers.RegisterDomainEventHandlersTx(container)
-	if err = handlers.RegisterCommandHandlersTx(container); err != nil {
+	events.RegisterDomainEventHandlersTx(container)
+	if err = events.RegisterCommandHandlersTx(container); err != nil {
 		return err
 	}
 	startOutboxProcessor(ctx, outboxProcessor, svc.Logger())

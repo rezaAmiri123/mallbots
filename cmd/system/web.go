@@ -10,9 +10,11 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"golang.org/x/sync/errgroup"
 )
-type Mux interface{
+
+type Mux interface {
 	Mux() *chi.Mux
 }
+
 func (s *System) initMux() {
 	s.mux = chi.NewMux()
 	s.mux.Use(middleware.Heartbeat("/liveness"))
@@ -23,11 +25,9 @@ func (s *System) Mux() *chi.Mux {
 	return s.mux
 }
 
-
-
 func (s *System) WaitForWeb(ctx context.Context) error {
 	webServer := &http.Server{
-		Addr:    s.cfg.Web.ApiPath,
+		Addr:    fmt.Sprintf(":%s", s.cfg.Web.Http.Port),
 		Handler: s.mux,
 	}
 

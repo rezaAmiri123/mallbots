@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"github.com/rezaAmiri123/mallbots/internal/ddd"
+	"github.com/rezaAmiri123/edatV2/ddd"
 	"github.com/stackus/errors"
 )
 

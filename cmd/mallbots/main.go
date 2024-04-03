@@ -11,6 +11,8 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/rezaAmiri123/mallbots/cmd/system"
+	"github.com/rezaAmiri123/mallbots/customers"
+	"github.com/rezaAmiri123/mallbots/internal/config"
 	"github.com/rezaAmiri123/mallbots/internal/web"
 	"github.com/rezaAmiri123/mallbots/migrations"
 )
@@ -28,7 +30,7 @@ func main() {
 }
 
 func run() (err error) {
-	var cfg system.Config
+	var cfg config.Config
 	err = godotenv.Load()
 	if err != nil {
 		log.Println("cannot load config:", err.Error())
@@ -48,7 +50,7 @@ func run() (err error) {
 		System: s,
 		modules: []system.Module{
 			// &baskets.Module{},
-			// &customers.Module{},
+			&customers.Module{},
 			// &depot.Module{},
 			// &notifications.Module{},
 			// &ordering.Module{},
@@ -83,6 +85,7 @@ func run() (err error) {
 		m.WaitForWeb,
 		m.WaitForRPC,
 		m.WaitForStream,
+		m.WaitForMonitoring,
 	)
 
 	// go func() {
