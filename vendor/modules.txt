@@ -27,6 +27,14 @@ github.com/golang/protobuf/proto
 # github.com/google/uuid v1.6.0
 ## explicit
 github.com/google/uuid
+# github.com/grpc-ecosystem/go-grpc-middleware v1.0.0
+## explicit
+github.com/grpc-ecosystem/go-grpc-middleware
+github.com/grpc-ecosystem/go-grpc-middleware/recovery
+github.com/grpc-ecosystem/go-grpc-middleware/tags
+# github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
+## explicit
+github.com/grpc-ecosystem/go-grpc-prometheus
 # github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.1
 ## explicit; go 1.19
 github.com/grpc-ecosystem/grpc-gateway/v2/internal/casing
@@ -143,10 +151,12 @@ github.com/rezaAmiri123/edatV2/am
 github.com/rezaAmiri123/edatV2/am/serializer
 github.com/rezaAmiri123/edatV2/amotel
 github.com/rezaAmiri123/edatV2/amprom
+github.com/rezaAmiri123/edatV2/core
 github.com/rezaAmiri123/edatV2/ddd
 github.com/rezaAmiri123/edatV2/di
 github.com/rezaAmiri123/edatV2/errorsotel
 github.com/rezaAmiri123/edatV2/es
+github.com/rezaAmiri123/edatV2/grpc
 github.com/rezaAmiri123/edatV2/log
 github.com/rezaAmiri123/edatV2/log/zerologger
 github.com/rezaAmiri123/edatV2/postgres
@@ -245,6 +255,7 @@ golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/salsa20/salsa
 # golang.org/x/net v0.21.0
 ## explicit; go 1.18
+golang.org/x/net/context
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack
