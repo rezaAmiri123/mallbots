@@ -31,8 +31,6 @@ const (
 )
 
 func (s *System) initRpc() {
-	// logger := a.container.Get(constants.LoggerKey).(zerolog.Logger)
-	// poolConn := a.container.Get(constants.DatabaseKey).(*pgxpool.Pool)
 	var opts []grpc.ServerOption
 	opts = append(opts,
 		grpc.KeepaliveParams(keepalive.ServerParameters{
@@ -55,14 +53,6 @@ func (s *System) initRpc() {
 		grpc.StatsHandler(otelgrpc.NewServerHandler()),
 	)
 
-	grpc.ChainUnaryInterceptor(
-		otelgrpc.UnaryServerInterceptor(),
-		serverErrorUnaryInterceptor(),
-	)
-	// If there are streaming endpoints also add
-	// grpc.StreamInterceptor(
-	// 	otelgrpc.StreamServerInterceptor(),
-	// ),
 	s.rpc = grpc.NewServer(opts...)
 	reflection.Register(s.rpc)
 	grpc_prometheus.Register(s.rpc)
