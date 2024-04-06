@@ -15,6 +15,7 @@ import (
 	"github.com/rezaAmiri123/mallbots/internal/config"
 	"github.com/rezaAmiri123/mallbots/internal/web"
 	"github.com/rezaAmiri123/mallbots/migrations"
+	"github.com/rezaAmiri123/mallbots/stores"
 )
 
 type monolith struct {
@@ -55,7 +56,7 @@ func run() (err error) {
 			// &notifications.Module{},
 			// &ordering.Module{},
 			// &payments.Module{},
-			// &stores.Module{},
+			&stores.Module{},
 			// &cosec.Module{},
 			// &search.Module{},
 		},

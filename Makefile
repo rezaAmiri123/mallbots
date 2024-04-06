@@ -1,3 +1,5 @@
+EVANS_PORT=8000
+
 install-tools:
 	@echo installing tools
 	@go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
@@ -20,3 +22,10 @@ docker_down:
 
 psql:
 	PGPASSWORD=mallbots_pass psql -h postgres -U mallbots_user -d mallbots
+
+
+evans:
+	evans --host localhost --port $(EVANS_PORT) -r repl
+
+pprof-heap:
+	go tool pprof -http localhost:8085 http://localhost:6060/debug/pprof/heap?debug=1

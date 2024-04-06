@@ -13,6 +13,7 @@ import (
 	"github.com/docker/go-connections/nat"
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/pressly/goose/v3"
+	"github.com/rezaAmiri123/mallbots/customers/internal/constants"
 	"github.com/rezaAmiri123/mallbots/customers/internal/domain"
 	"github.com/rezaAmiri123/mallbots/migrations"
 	"github.com/stretchr/testify/suite"
@@ -32,7 +33,7 @@ func TestPostgresCustomerRepository(t *testing.T) {
 	if testing.Short() {
 		t.Skip("short mode: skipping")
 	}
-	suite.Run(t, &customerSuite{tableName: "customers"})
+	suite.Run(t, &customerSuite{tableName: constants.CustomersTableName})
 }
 
 func (s *customerSuite) SetupSuite() {

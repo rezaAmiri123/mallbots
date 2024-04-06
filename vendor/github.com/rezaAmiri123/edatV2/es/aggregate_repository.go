@@ -2,6 +2,7 @@ package es
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/rezaAmiri123/edatV2/ddd"
 	"github.com/rezaAmiri123/edatV2/registry"
@@ -59,8 +60,11 @@ func(r aggregateRepository[T])Load(ctx context.Context, aggregateID string) (agg
 
 func(r aggregateRepository[T])Save(ctx context.Context, aggregate T) error{
 	if aggregate.Version()==aggregate.PendingVersion(){
+		fmt.Println("aggregate.Version(): ",aggregate.Version())
+		fmt.Println("aggregate.PendingVersion(): ", aggregate.PendingVersion())
 		return nil
 	}
+	fmt.Println("func(r aggregateRepository[T])Save(ctx context.Context, aggregate T) error{")
 	for _, event := range aggregate.Events(){
 		if err := aggregate.ApplyEvent(event);err!= nil{
 			return err
