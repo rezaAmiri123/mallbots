@@ -98,8 +98,6 @@ func (s EventStore) Load(ctx context.Context, aggregate es.EventSourcedAggregate
 }
 
 func (s EventStore) Save(ctx context.Context, aggregate es.EventSourcedAggregate) (err error) {
-	fmt.Println("*******************")
-	fmt.Println("func (s EventStore) Save(ctx context.Context, aggregate es.EventSourcedAggregate) (err error) {")
 	const query = `INSERT INTO %s (stream_id, stream_name, stream_version, event_id, event_name, event_data, occurred_at) VALUES`
 
 	aggregateID := aggregate.ID()

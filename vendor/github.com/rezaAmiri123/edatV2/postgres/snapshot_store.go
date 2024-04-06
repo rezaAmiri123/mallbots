@@ -69,8 +69,6 @@ func (s SnapshotStore) Load(ctx context.Context, aggregate es.EventSourcedAggreg
 }
 
 func (s SnapshotStore) Save(ctx context.Context, aggregate es.EventSourcedAggregate) error {
-	fmt.Println("*************************")
-	fmt.Println("func (s SnapshotStore) Save(ctx context.Context, aggregate es.EventSourcedAggregate) error {")
 	const query = `INSERT INTO %s 
 		  (stream_id, stream_name, stream_version, snapshot_name, snapshot_data) 
 		  VALUES ($1, $2, $3, $4, $5) 
