@@ -2,7 +2,6 @@ package commands
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/rezaAmiri123/edatV2/ddd"
 	"github.com/rezaAmiri123/mallbots/stores/internal/domain"
@@ -46,7 +45,6 @@ func (h CreateStoreHandler) CreateStore(ctx context.Context, cmd CreateStore) er
 	if err != nil {
 		return err
 	}
-	fmt.Println("^^^^^^^^^^^^^^^^^^^^^^^^",*store)
 	
 	return h.publisher.Publish(ctx, event)
 }

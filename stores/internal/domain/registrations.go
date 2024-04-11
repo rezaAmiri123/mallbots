@@ -24,5 +24,26 @@ func Registrations(serde registry.Serde) (err error) {
 		return
 	}
 
+	if err := serde.Register(Product{}, func(v interface{}) error {
+		product := v.(*Product)
+		product.Aggregate = es.NewAggregate("", ProductAggregate)
+		return nil
+	}); err != nil {
+		return err
+	}
+
+	// product events
+	if err = serde.Register(ProductAdded{}); err != nil {
+		return
+	}
+	if err = serde.RegisterKey(ProductPriceIncreasedEvent, ProductPriceChanged{}); err != nil {
+		return
+	}
+
+	// product snapshots
+	if err = serde.RegisterKey(ProductV1{}.SnapshotName(), ProductV1{}); err != nil {
+		return
+	}
+
 	return
 }

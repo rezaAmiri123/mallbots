@@ -30,13 +30,41 @@ func (s serverTx) CreateStore(ctx context.Context, request *storespb.CreateStore
 	ctx = s.c.Scoped(ctx)
 	defer func(tx *sql.Tx) {
 		err = s.closeTx(tx, err)
-	}(di.Get(ctx, constants.DatabaseTransactionKey).(*sql.Tx))
+	}(di.Get(ctx, constants.DatabaseTxKey).(*sql.Tx))
 
-	next := server{app: di.Get(ctx, constants.ApplicationKey).(application.App)}
+	next := server{app: di.Get(ctx, constants.ApplicationTxKey).(application.App)}
 
 	return next.CreateStore(ctx, request)
 }
 
+func (s serverTx) AddProduct(ctx context.Context, request *storespb.AddProductRequest) (resp *storespb.AddProductResponse, err error) {
+	ctx = s.c.Scoped(ctx)
+	defer func(tx *sql.Tx) {
+		err = s.closeTx(tx, err)
+	}(di.Get(ctx, constants.DatabaseTxKey).(*sql.Tx))
+
+	next := server{app: di.Get(ctx, constants.ApplicationTxKey).(application.App)}
+
+	return next.AddProduct(ctx, request)
+}
+
+func (s serverTx) IncreaseProductPrice(ctx context.Context, request *storespb.IncreaseProductPriceRequest) (resp *storespb.IncreaseProductPriceResponse, err error) {
+	ctx = s.c.Scoped(ctx)
+	defer func(tx *sql.Tx) {
+		err = s.closeTx(tx, err)
+	}(di.Get(ctx, constants.DatabaseTxKey).(*sql.Tx))
+
+	next := server{app: di.Get(ctx, constants.ApplicationTxKey).(application.App)}
+
+	return next.IncreaseProductPrice(ctx, request)
+}
+
+func (s serverTx) GetStore(ctx context.Context, request *storespb.GetStoreRequest) (resp *storespb.GetStoreResponse, err error) {
+	ctx = s.c.Scoped(ctx)
+	next := server{app: di.Get(ctx, constants.ApplicationKey).(application.App)}
+
+	return next.GetStore(ctx, request)
+}
 
 func (s serverTx) closeTx(tx *sql.Tx, err error) error {
 	if p := recover(); p != nil {

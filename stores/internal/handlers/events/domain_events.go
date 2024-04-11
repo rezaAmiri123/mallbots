@@ -28,6 +28,8 @@ func NewDomainEventHandlers(publisher am.EventPublisher) ddd.EventHandler[ddd.Ev
 func RegisterDomainEventHandlers(subscriber ddd.EventSubscriber[ddd.Event], handlers ddd.EventHandler[ddd.Event]) {
 	subscriber.Subscribe(handlers,
 		domain.StoreCreatedEvent,
+		domain.ProductAddedEvent,
+		domain.ProductPriceIncreasedEvent,
 	)
 }
 
@@ -52,13 +54,17 @@ func (h domainHandlers[T]) HandleEvent(ctx context.Context, event T) (err error)
 	switch event.EventName() {
 	case domain.StoreCreatedEvent:
 		return h.onStoreCreated(ctx, event)
+	case domain.ProductAddedEvent:
+		return h.onProductAdded(ctx, event)
+	case domain.ProductPriceIncreasedEvent:
+		return h.onProductPriceIncreased(ctx, event)
 	}
 	return nil
 }
 
 func (h domainHandlers[T]) onStoreCreated(ctx context.Context, event ddd.Event) error {
 	store := event.Payload().(*domain.Store)
-	
+
 	newEvent := ddd.NewEvent(storespb.StoreCreatedEvent, &storespb.StoreCreated{
 		Id:       store.ID(),
 		Name:     store.Name,
@@ -66,4 +72,30 @@ func (h domainHandlers[T]) onStoreCreated(ctx context.Context, event ddd.Event) 
 	})
 
 	return h.publisher.Publish(ctx, storespb.StoreAggregateChannel, newEvent)
+}
+
+func (h domainHandlers[T]) onProductAdded(ctx context.Context, event ddd.Event) error {
+	product := event.Payload().(*domain.Product)
+
+	newEvent := ddd.NewEvent(storespb.ProductAddedEvent, &storespb.ProductAdded{
+		Id:          product.ID(),
+		StoreId:     product.StoreID,
+		Name:        product.Name,
+		Description: product.Description,
+		Sku:         product.SKU,
+		Price:       product.Price,
+	})
+
+	return h.publisher.Publish(ctx, storespb.ProductAggregateChannel, newEvent)
+}
+
+func (h domainHandlers[T]) onProductPriceIncreased(ctx context.Context, event ddd.Event) error {
+	payload := event.Payload().(*domain.ProductPriceDelta)
+
+	newEvent := ddd.NewEvent(storespb.ProductPriceIncreasedEvent, &storespb.ProductPriceChanged{
+		Id:    payload.Product.ID(),
+		Delta: payload.Delta,
+	})
+
+	return h.publisher.Publish(ctx, storespb.ProductAggregateChannel, newEvent)
 }

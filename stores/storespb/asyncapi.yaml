@@ -1,0 +1,51 @@
+# ag asyncapi.yaml @asyncapi/html-template --force-write
+asyncapi: '2.3.0'
+info:
+  title: Store Management AsyncAPI
+  version: '1.0.0'
+
+defaultContentType: application/octet-stream
+
+channels:
+  mallbots.stores.events.Store:
+    $ref: '#/components/channels/mallbots.stores.events.Store'
+components:
+  channels:
+    mallbots.stores.events.Store:
+      subscribe:
+        operationId: storeAggregateEvents
+        message:
+          oneOf:
+            - $ref: '#/components/messages/storesapi.StoreCreatedEvent'
+        tags:
+          - name: Store
+      bindings:
+        nats:
+          queue: mallbots.stores.events.Store
+          x-queue-constant: storespb.StoreAggregateChannel
+  messages:
+    storesapi.StoreCreatedEvent:
+      title: StoreCreated
+      description: A new store has been created
+      x-name-constant: storespb.StoreCreatedEvent
+      x-payload-type: '*storespb.StoreCreated'
+      payload:
+        $ref: '#/components/schemas/storespb.StoreCreated'
+      tags:
+        - name: Store
+  schemas:
+    StoreId:
+      type: string
+      description: Identity of the store
+    storespb.StoreCreated:
+      type: object
+      additionalProperties: false
+      properties:
+        Id:
+          $ref: '#/components/schemas/StoreId'
+        Name:
+          type: string
+          description: Name of the new store
+        Location:
+          type: string
+          description: Description of the store location in the mall

@@ -30,7 +30,18 @@ func RegistrationsWithSerde(serde registry.Serde) error {
 	if err := serde.Register(&StoreCreated{}); err != nil {
 		return err
 	}
+
+	// Product events
+	if err := serde.Register(&ProductAdded{}); err != nil {
+		return err
+	}
+
+	if err := serde.RegisterKey(ProductPriceIncreasedEvent, &ProductPriceChanged{});err!= nil{
+		return err
+	}
 	return nil
 }
 
 func (*StoreCreated) Key() string { return StoreCreatedEvent }
+
+func (*ProductAdded) Key() string { return ProductAddedEvent }

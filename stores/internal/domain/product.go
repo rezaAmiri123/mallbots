@@ -57,6 +57,23 @@ func (p *Product) InitProduct(id, storeID, name, description, sku string, price 
 	return ddd.NewEvent(ProductAddedEvent, p), nil
 }
 
+func(p *Product)IncreasePrice(price float64)(ddd.Event,error){
+	// if price < p.Price {
+	// 	return nil, ErrNotAPriceIncrease
+	// }
+
+	// delta := price - p.Price
+	delta := price
+	p.AddEvent(ProductPriceIncreasedEvent, &ProductPriceChanged{
+		Delta: delta,
+	})
+
+	return ddd.NewEvent(ProductPriceIncreasedEvent, &ProductPriceDelta{
+		Product: p,
+		Delta: delta,
+	}),nil
+}
+
 func (p *Product) ApplyEvent(event ddd.Event) error {
 	switch payload := event.Payload().(type) {
 	case *ProductAdded:
@@ -65,6 +82,8 @@ func (p *Product) ApplyEvent(event ddd.Event) error {
 		p.Description = payload.Description
 		p.SKU = payload.SKU
 		p.Price = payload.Price
+	case *ProductPriceChanged:
+		p.Price += payload.Delta
 	default:
 		return errors.ErrInternal.Msgf("%T recieved the event %s with unexpected payload %T", p, event.EventName(), payload)
 	}
