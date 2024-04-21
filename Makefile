@@ -29,3 +29,8 @@ evans:
 
 pprof-heap:
 	go tool pprof -http localhost:8085 http://localhost:6060/debug/pprof/heap?debug=1
+
+generate:
+	@echo running code generation
+	@go generate ./...
+	@echo done

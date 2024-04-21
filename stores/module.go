@@ -53,7 +53,6 @@ func (m Module) Startup(ctx context.Context, mono system.Service) (err error) {
 		amSerializer: amserializer.NewJsonSerializer(),
 	}
 	return r.Startup()
-	// return Root(ctx, mono)
 }
 
 type root struct {
@@ -61,6 +60,47 @@ type root struct {
 	ctx          context.Context
 	svc          Service
 	amSerializer am.MessageSerializer
+}
+
+func (r *root) Startup() (err error) {
+	r.registry()
+	r.database()
+	r.jsStream()
+
+	r.dispatcher()
+	r.esAggregateStore()
+	r.esStoreRepo()
+	r.esProductRepo()
+	r.mallRepo()
+	r.catalogRepo()
+	r.application()
+
+	r.domainEventHandler()
+	r.mallHandler()
+	r.catalogHandler()
+
+	// }
+	// func Root(ctx context.Context, svc Service) (err error) {
+
+	// container.AddScoped(constants.InboxStoreTxKey, func(c di.Container) (any, error) {
+	// 	tx := postgresotel.Trace(c.Get(constants.DatabaseTxKey).(*sql.Tx))
+	// 	return postgres.NewInboxStore(constants.InboxTableName, tx), nil
+	// })
+
+	// setup Driver adapters
+	if err = grpcserver.RegisterServerTx(r.container, r.svc.RPC()); err != nil {
+		return err
+	}
+
+	// if err = storespb.RegisterAsyncAPI(svc.Mux()); err != nil {
+	// 	return err
+	// }
+
+	events.RegisterDomainEventHandlersTx(r.container)
+	events.RegisterMallHandlersTx(r.container)
+	events.RegisterCatalagHandlersTx(r.container)
+
+	return nil
 }
 
 func (r *root) registry() {
@@ -238,6 +278,7 @@ func (r *root) application() {
 		), nil
 	})
 }
+
 func (r *root) domainEventHandler() {
 	r.container.AddScoped(constants.DomainEventHandlersKey, func(c di.Container) (any, error) {
 		return events.NewDomainEventHandlers(c.Get(constants.EventPublisherKey).(am.EventPublisher)), nil
@@ -265,46 +306,6 @@ func (r *root) catalogHandler() {
 	})
 }
 
-func (r *root) Startup() (err error) {
-	r.registry()
-	r.database()
-	r.jsStream()
-
-	r.dispatcher()
-	r.esAggregateStore()
-	r.esStoreRepo()
-	r.esProductRepo()
-	r.mallRepo()
-	r.catalogRepo()
-	r.application()
-
-	r.domainEventHandler()
-	r.mallHandler()
-	r.catalogHandler()
-
-	// }
-	// func Root(ctx context.Context, svc Service) (err error) {
-
-	// container.AddScoped(constants.InboxStoreTxKey, func(c di.Container) (any, error) {
-	// 	tx := postgresotel.Trace(c.Get(constants.DatabaseTxKey).(*sql.Tx))
-	// 	return postgres.NewInboxStore(constants.InboxTableName, tx), nil
-	// })
-
-	// setup Driver adapters
-	if err = grpcserver.RegisterServerTx(r.container, r.svc.RPC()); err != nil {
-		return err
-	}
-
-	// if err = storespb.RegisterAsyncAPI(svc.Mux()); err != nil {
-	// 	return err
-	// }
-
-	events.RegisterDomainEventHandlersTx(r.container)
-	events.RegisterMallHandlersTx(r.container)
-	events.RegisterCatalagHandlersTx(r.container)
-
-	return nil
-}
 
 // func startOutboxProcessor(ctx context.Context, outboxProcessor tm.OutboxProcessor, logger zerolog.Logger) {
 // 	go func() {

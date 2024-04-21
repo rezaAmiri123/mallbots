@@ -15,12 +15,40 @@ type MockCommands struct {
 	mock.Mock
 }
 
+// AddProduct provides a mock function with given fields: ctx, cmd
+func (_m *MockCommands) AddProduct(ctx context.Context, cmd commands.AddProduct) error {
+	ret := _m.Called(ctx, cmd)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, commands.AddProduct) error); ok {
+		r0 = rf(ctx, cmd)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // CreateStore provides a mock function with given fields: ctx, cmd
 func (_m *MockCommands) CreateStore(ctx context.Context, cmd commands.CreateStore) error {
 	ret := _m.Called(ctx, cmd)
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(context.Context, commands.CreateStore) error); ok {
+		r0 = rf(ctx, cmd)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// IncreaseProductPrice provides a mock function with given fields: ctx, cmd
+func (_m *MockCommands) IncreaseProductPrice(ctx context.Context, cmd commands.IncreaseProductPrice) error {
+	ret := _m.Called(ctx, cmd)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, commands.IncreaseProductPrice) error); ok {
 		r0 = rf(ctx, cmd)
 	} else {
 		r0 = ret.Error(0)

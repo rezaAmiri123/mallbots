@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type AppConfig interface{
+type AppConfig interface {
 	Config() Config
 }
 
@@ -87,9 +87,10 @@ type Config struct {
 	StreamType      string        `envconfig:"STREAM_TYPE"`
 	Monitoring      MonitoringCfg `envconfig:"MONITORING"`
 	ShutdownTimeout time.Duration `envconfig:"SHUTDOWN_TIMEOUT" default:"30s" desc:"time to allow services to gracefully stop"`
-	Web             webCfg        `envconfig:"WEB"`        // Web Config
-	Rpc             ServerCfg     `envconfig:"RPC"`        // RPC Config
-	Restaurant      ClientCfg     `envconfig:"RESTAURANT"` // RPC Client Config
+	Web             webCfg        `envconfig:"WEB"`       // Web Config
+	Rpc             ServerCfg     `envconfig:"RPC"`       // RPC Config
+	Customers       ClientCfg     `envconfig:"CUSTOMERS"` // RPC Client Config
+	Stores          ClientCfg     `envconfig:"STORES"`    // RPC Client Config
 	//Postgres        postgres.Config `envconfig:"PG"`                                                              // DataDriver / Postgres
 	Postgres    pgCfg    `envconfig:"PG"`
 	EventDriver string   `envconfig:"EVENT_DRIVER" default:"inmem" desc:"options: [inmem,nats,kafka]"` // "inmem", "nats", "kafka"

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package basketspb;
+option go_package = "github.com/rezaAmiri123/mallbots/baskets/basketspb";
+
+message BasketStarted {
+    string id = 1;
+    string customer_id = 2;
+  }
+  
+

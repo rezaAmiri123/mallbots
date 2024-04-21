@@ -10,6 +10,7 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/rezaAmiri123/mallbots/baskets"
 	"github.com/rezaAmiri123/mallbots/cmd/system"
 	"github.com/rezaAmiri123/mallbots/customers"
 	"github.com/rezaAmiri123/mallbots/internal/config"
@@ -50,7 +51,7 @@ func run() (err error) {
 	m := monolith{
 		System: s,
 		modules: []system.Module{
-			// &baskets.Module{},
+			&baskets.Module{},
 			&customers.Module{},
 			// &depot.Module{},
 			// &notifications.Module{},
