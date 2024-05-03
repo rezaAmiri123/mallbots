@@ -69,5 +69,5 @@ func (h catalagHandlers[T]) HandleEvent(ctx context.Context, event T) (err error
 
 func(h catalagHandlers[T])onProductAdded(ctx context.Context, event ddd.Event)error{
 	payload := event.Payload().(*domain.Product)
-	return h.catalog.AddProduct(ctx,payload.ID(),payload.Name,payload.StoreID,payload.Description,payload.SKU,payload.Price)
+	return h.catalog.AddProduct(ctx,payload.ID(),payload.StoreID,payload.Name,payload.Description,payload.SKU,payload.Price)
 }

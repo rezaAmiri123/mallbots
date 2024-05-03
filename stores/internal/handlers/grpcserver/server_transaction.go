@@ -66,6 +66,16 @@ func (s serverTx) GetStore(ctx context.Context, request *storespb.GetStoreReques
 	return next.GetStore(ctx, request)
 }
 
+func (s serverTx) GetProduct(ctx context.Context, request *storespb.GetProductRequest) (resp *storespb.GetProductResponse, err error) {
+	fmt.Println("func (s serverTx) GetProduct(ctx context.Context, request *storespb.GetProductRequest) (resp *storespb.GetProductResponse, err error) {")
+	ctx = s.c.Scoped(ctx)
+	fmt.Println("next := server{app: di.Get(ctx, constants.ApplicationKey).(application.App)}")
+	next := server{app: di.Get(ctx, constants.ApplicationKey).(application.App)}
+
+	fmt.Println("return next.GetProduct(ctx, request)")
+	return next.GetProduct(ctx, request)
+}
+
 func (s serverTx) closeTx(tx *sql.Tx, err error) error {
 	if p := recover(); p != nil {
 		_ = tx.Rollback()

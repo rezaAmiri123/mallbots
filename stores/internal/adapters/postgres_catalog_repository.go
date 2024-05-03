@@ -43,12 +43,6 @@ func (r PostgresCatalogRepository) Find(ctx context.Context, productID string) (
 	return catalog, err
 }
 
-// func(r PostgresCatalogRepository){}
-// func(r PostgresCatalogRepository){}
-// func(r PostgresCatalogRepository){}
-// func(r PostgresCatalogRepository){}
-// func(r PostgresCatalogRepository){}
-// func(r PostgresCatalogRepository){}
 func (r PostgresCatalogRepository) table(query string) string {
 	return fmt.Sprintf(query, r.tableName)
 }

@@ -49,3 +49,47 @@ func (s server) StartBasket(ctx context.Context, request *basketspb.StartBasketR
 
 	return &basketspb.StartBasketResponse{Id: id}, err
 }
+
+func (s server) CheckoutBasket(ctx context.Context, request *basketspb.CheckoutBasketRequest) (resp *basketspb.CheckoutBasketResponse, err error) {
+	span := trace.SpanFromContext(ctx)
+
+	span.SetAttributes(
+		attribute.String("BasketID", request.GetId()),
+		attribute.String("PaymentID", request.GetPaymentId()),
+	)
+
+	err = s.app.CheckoutBasket(ctx, application.CheckoutBasket{
+		ID:         request.GetId(),
+		PaymentID: request.GetPaymentId(),
+	})
+	if err != nil {
+		span.RecordError(err, trace.WithAttributes(errorsotel.ErrAttrs(err)...))
+		span.SetStatus(codes.Error, err.Error())
+		return nil, err
+	}
+
+	return &basketspb.CheckoutBasketResponse{}, err
+
+}
+
+func (s server) AddItem(ctx context.Context, request *basketspb.AddItemRequest) (resp *basketspb.AddItemResponse, err error) {
+	span := trace.SpanFromContext(ctx)
+
+	span.SetAttributes(
+		attribute.String("BasketID", request.GetId()),
+		attribute.String("ProductID", request.GetProductId()),
+	)
+
+	err = s.app.AddItem(ctx, application.AddItem{
+		ID:        request.GetId(),
+		ProductID: request.GetProductId(),
+		Quantity:  int(request.GetQuantity()),
+	})
+	if err != nil {
+		span.RecordError(err, trace.WithAttributes(errorsotel.ErrAttrs(err)...))
+		span.SetStatus(codes.Error, err.Error())
+		return nil, err
+	}
+
+	return &basketspb.AddItemResponse{}, nil
+}

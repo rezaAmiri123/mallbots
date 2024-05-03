@@ -24,6 +24,7 @@ const (
 	CommandPublisherKey           = "commandPublisher"
 	ReplyPublisherKey             = "replyPublisher"
 	SagaStoreKey                  = "sagaStore"
+	InboxStoreTxKey               = "inboxStoreTx"
 	InboxStoreKey                 = "inboxStore"
 	ApplicationKey                = "app"
 	ApplicationTxKey              = "appTx"
@@ -37,6 +38,7 @@ const (
 	BasketsRepoKey   = "basketsRepo"
 	StoresRepoTxKey  = "storesRepoTx"
 	StoresRepoKey    = "storesRepo"
+	ProductsRepoTxKey  = "productsRepoTx"
 	ProductsRepoKey  = "productsRepo"
 )
 

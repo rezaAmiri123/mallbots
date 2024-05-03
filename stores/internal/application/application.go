@@ -23,6 +23,7 @@ type (
 
 	Queries interface {
 		GetStore(ctx context.Context, query queries.GetStore) (*domain.MallStore, error)
+		GetProduct(ctx context.Context, query queries.GetProduct) (*domain.CatalogProduct, error)
 	}
 
 	Application struct {
@@ -36,6 +37,7 @@ type (
 	}
 	appQueries struct {
 		queries.GetStoreHandler
+		queries.GetProductHandler
 	}
 )
 
@@ -44,6 +46,7 @@ var _ App = (*Application)(nil)
 func New(
 	stores domain.StoreRepository,
 	mall domain.MallRepository,
+	catalog domain.CatalogRepository,
 	products domain.ProductRepository,
 	publisher ddd.EventPublisher[ddd.Event],
 ) *Application {
@@ -54,7 +57,8 @@ func New(
 			IncreaseProductPriceHandler: commands.NewIncreaseProductPriceHandler(products, publisher),
 		},
 		appQueries: appQueries{
-			GetStoreHandler: queries.NewGetStoreHandler(mall),
+			GetStoreHandler:   queries.NewGetStoreHandler(mall),
+			GetProductHandler: queries.NewGetProductHandler(catalog),
 		},
 	}
 }

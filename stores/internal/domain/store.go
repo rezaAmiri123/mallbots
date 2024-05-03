@@ -1,8 +1,6 @@
 package domain
 
 import (
-	"fmt"
-
 	"github.com/rezaAmiri123/edatV2/ddd"
 	"github.com/rezaAmiri123/edatV2/es"
 	"github.com/stackus/errors"
@@ -54,7 +52,6 @@ func (s *Store) InitStore(name, location string) (ddd.Event, error) {
 	return ddd.NewEvent(StoreCreatedEvent, s), nil
 }
 func (s *Store) ApplyEvent(event ddd.Event) error {
-	fmt.Println("func (s *Store) ApplyEvent(event ddd.Event) error {")
 	switch payload := event.Payload().(type) {
 	case *StoreCreated:
 		s.Name = payload.Name

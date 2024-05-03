@@ -79,17 +79,26 @@ func (r *root) Startup() (err error) {
 	r.dispatcher()
 	r.esAggregateStore()
 	r.esBasketRepo()
+
+	r.rpcClients()
+	r.storeRepo()
+	r.productRepo()
+
 	r.application()
 
 	if err = grpcserver.RegisterServerTx(r.container, r.svc.RPC()); err != nil {
 		return err
 	}
 
-	r.rpcClients()
-	r.storeRepo()
 	r.jsStream()
 	r.domainEventHandler()
 	events.RegisterDomainEventHandlersTx(r.container)
+
+	r.inboxStore()
+	r.integrationEventHandler()
+	if err = events.RegisterIntegrationEventHandlersTx(r.container); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -104,6 +113,10 @@ func (r *root) registry() {
 		if err := basketspb.RegistrationsWithSerde(JsonSerde); err != nil {
 			return nil, err
 		}
+		if err := storespb.RegistrationsWithSerde(JsonSerde); err != nil {
+			return nil, err
+		}
+
 		return reg, nil
 	})
 }
@@ -164,19 +177,26 @@ func (r *root) application() {
 	basketsStarted := promauto.NewCounter(prometheus.CounterOpts{
 		Name: constants.BasketsStartedCount,
 	})
+	basketsCheckedOut := promauto.NewCounter(prometheus.CounterOpts{
+		Name: constants.BasketsCheckedOutCount,
+	})
 
 	r.container.AddScoped(constants.ApplicationTxKey, func(c di.Container) (any, error) {
 		return application.NewInstrumentedApp(application.New(
 			c.Get(constants.BasketsRepoTxKey).(domain.BasketRepository),
+			c.Get(constants.StoresRepoTxKey).(domain.StoreCacheRepository),
+			c.Get(constants.ProductsRepoTxKey).(domain.ProductCacheRepository),
 			c.Get(constants.DomainDispatcherKey).(ddd.EventPublisher[ddd.Event]),
-		), basketsStarted), nil
+		), basketsStarted, basketsCheckedOut), nil
 	})
 	// setup application
 	r.container.AddScoped(constants.ApplicationKey, func(c di.Container) (any, error) {
 		return application.NewInstrumentedApp(application.New(
 			c.Get(constants.BasketsRepoKey).(domain.BasketRepository),
+			c.Get(constants.StoresRepoKey).(domain.StoreCacheRepository),
+			c.Get(constants.ProductsRepoKey).(domain.ProductCacheRepository),
 			c.Get(constants.DomainDispatcherKey).(ddd.EventPublisher[ddd.Event]),
-		), basketsStarted), nil
+		), basketsStarted, basketsCheckedOut), nil
 	})
 }
 
@@ -270,14 +290,6 @@ func (r *root) rpcClients() error {
 	}
 
 	config := r.svc.Config()
-	customerClient, err := getGRPCClient(ctx, config.Customers.Address, nil)
-	if err != nil {
-		return err
-	}
-
-	r.container.AddSingleton(constants.CustomersServiceName, func(c di.Container) (any, error) {
-		return customerClient, nil
-	})
 
 	storeClient, err := getGRPCClient(ctx, config.Stores.Address, nil)
 	if err != nil {
@@ -307,5 +319,47 @@ func (r *root) storeRepo() {
 			postgresotel.Trace(c.Get(constants.DatabaseKey).(*sql.DB)),
 			adapters.NewGrpcStoreRepository(client),
 		), nil
+	})
+}
+
+func (r *root) productRepo() {
+	conn := r.container.Get(constants.StoresServiceName).(*grpc.ClientConn)
+	client := storespb.NewStoresServiceClient(conn)
+	r.container.AddScoped(constants.ProductsRepoTxKey, func(c di.Container) (any, error) {
+		return adapters.NewPostgresProductCacheRepository(
+			constants.ProductsCacheTableName,
+			postgresotel.Trace(c.Get(constants.DatabaseTxKey).(*sql.Tx)),
+			adapters.NewGrpcProductRepository(client),
+		), nil
+	})
+	r.container.AddScoped(constants.ProductsRepoKey, func(c di.Container) (any, error) {
+		return adapters.NewPostgresProductCacheRepository(
+			constants.ProductsCacheTableName,
+			postgresotel.Trace(c.Get(constants.DatabaseKey).(*sql.DB)),
+			adapters.NewGrpcProductRepository(client),
+		), nil
+	})
+}
+
+func (r *root) integrationEventHandler() {
+	r.container.AddScoped(constants.IntegrationEventHandlersTxKey, func(c di.Container) (any, error) {
+		return events.NewIntegrationHandlers(
+			c.Get(constants.RegistryKey).(registry.Registry),
+			r.amSerializer,
+			c.Get(constants.StoresRepoTxKey).(domain.StoreCacheRepository),
+			c.Get(constants.ProductsRepoTxKey).(domain.ProductCacheRepository),
+			tm.InboxHandler(c.Get(constants.InboxStoreTxKey).(tm.InboxStore)),
+		), nil
+	})
+}
+
+func (r *root) inboxStore() {
+	r.container.AddScoped(constants.InboxStoreTxKey, func(c di.Container) (any, error) {
+		tx := postgresotel.Trace(c.Get(constants.DatabaseTxKey).(*sql.Tx))
+		return postgres.NewInboxStore(constants.InboxTableName, tx), nil
+	})
+	r.container.AddSingleton(constants.InboxStoreKey, func(c di.Container) (any, error) {
+		db := postgresotel.Trace(r.svc.DB())
+		return postgres.NewInboxStore(constants.InboxTableName, db), nil
 	})
 }

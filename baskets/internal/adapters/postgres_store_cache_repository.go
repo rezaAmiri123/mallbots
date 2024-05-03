@@ -52,6 +52,7 @@ func (r PostgresStoreCacheRepository) Find(ctx context.Context, storeID string) 
 		}
 		store, err = r.fallback.Find(ctx, storeID)
 		if err != nil {
+			fmt.Println(err)
 			return nil, errors.Wrap(err, "store fallback failed")
 		}
 		// attempt to add it to the cache

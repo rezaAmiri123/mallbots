@@ -47,6 +47,32 @@ func (_m *MockApp) CreateStore(ctx context.Context, cmd commands.CreateStore) er
 	return r0
 }
 
+// GetProduct provides a mock function with given fields: ctx, query
+func (_m *MockApp) GetProduct(ctx context.Context, query queries.GetProduct) (*domain.CatalogProduct, error) {
+	ret := _m.Called(ctx, query)
+
+	var r0 *domain.CatalogProduct
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, queries.GetProduct) (*domain.CatalogProduct, error)); ok {
+		return rf(ctx, query)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, queries.GetProduct) *domain.CatalogProduct); ok {
+		r0 = rf(ctx, query)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*domain.CatalogProduct)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, queries.GetProduct) error); ok {
+		r1 = rf(ctx, query)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetStore provides a mock function with given fields: ctx, query
 func (_m *MockApp) GetStore(ctx context.Context, query queries.GetStore) (*domain.MallStore, error) {
 	ret := _m.Called(ctx, query)

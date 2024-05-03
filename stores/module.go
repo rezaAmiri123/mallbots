@@ -264,6 +264,7 @@ func (r *root) application() {
 		return application.New(
 			c.Get(constants.StoresRepoTxKey).(domain.StoreRepository),
 			c.Get(constants.MallRepoTxKey).(domain.MallRepository),
+			c.Get(constants.CatalogRepoTxKey).(domain.CatalogRepository),
 			c.Get(constants.ProductsRepoTxKey).(domain.ProductRepository),
 			c.Get(constants.DomainDispatcherKey).(ddd.EventPublisher[ddd.Event]),
 		), nil
@@ -273,6 +274,7 @@ func (r *root) application() {
 		return application.New(
 			c.Get(constants.StoresRepoKey).(domain.StoreRepository),
 			c.Get(constants.MallRepoKey).(domain.MallRepository),
+			c.Get(constants.CatalogRepoKey).(domain.CatalogRepository),
 			c.Get(constants.ProductsRepoKey).(domain.ProductRepository),
 			c.Get(constants.DomainDispatcherKey).(ddd.EventPublisher[ddd.Event]),
 		), nil
@@ -305,7 +307,6 @@ func (r *root) catalogHandler() {
 		return events.NewCatalagHandlers(c.Get(constants.CatalogRepoKey).(domain.CatalogRepository)), nil
 	})
 }
-
 
 // func startOutboxProcessor(ctx context.Context, outboxProcessor tm.OutboxProcessor, logger zerolog.Logger) {
 // 	go func() {

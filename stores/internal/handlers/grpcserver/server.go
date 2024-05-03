@@ -2,6 +2,7 @@ package grpcserver
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/rezaAmiri123/edatV2/errorsotel"
@@ -116,11 +117,42 @@ func (s server) IncreaseProductPrice(ctx context.Context, request *storespb.Incr
 	return &storespb.IncreaseProductPriceResponse{}, err
 }
 
+func (s server) GetProduct(ctx context.Context, request *storespb.GetProductRequest) (resp *storespb.GetProductResponse, err error) {
+	span := trace.SpanFromContext(ctx)
+
+	span.SetAttributes(
+		attribute.String("ProductID", request.GetId()),
+	)
+	
+	fmt.Println("product, err := s.app.GetProduct(ctx, queries.GetProduct{")
+	product, err := s.app.GetProduct(ctx, queries.GetProduct{
+		ID: request.GetId(),
+	})
+	if err != nil {
+		span.RecordError(err, trace.WithAttributes(errorsotel.ErrAttrs(err)...))
+		span.SetStatus(codes.Error, err.Error())
+		return nil, err
+	}
+
+	return &storespb.GetProductResponse{Product: s.productFromDomain(product)}, nil
+}
+
 func (s server) storeFromDomain(store *domain.MallStore) *storespb.Store {
 	return &storespb.Store{
 		Id:            store.ID,
 		Name:          store.Name,
 		Location:      store.Location,
 		Participating: store.Participating,
+	}
+}
+
+func (s server) productFromDomain(product *domain.CatalogProduct) *storespb.Product {
+	return &storespb.Product{
+		Id:          product.ID,
+		StoreId:     product.StoreID,
+		Name:        product.Name,
+		Description: product.Description,
+		Sku:         product.SKU,
+		Price:       product.Price,
 	}
 }

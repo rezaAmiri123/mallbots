@@ -6,6 +6,7 @@ import (
 
 	"github.com/rezaAmiri123/edatV2/postgres"
 	"github.com/rezaAmiri123/mallbots/stores/internal/domain"
+	"github.com/stackus/errors"
 )
 
 type PostgresMallRepository struct {
@@ -40,7 +41,10 @@ func (r PostgresMallRepository) Find(ctx context.Context, storeID string) (*doma
 	err := r.db.QueryRowContext(ctx, r.table(query), storeID).Scan(
 		&store.Name, &store.Location, &store.Participating,
 	)
-	return store, err
+	if err != nil{
+		return nil, errors.Wrap(err, "scanning store")
+	}
+	return store, nil
 }
 
 // func(r PostgresMallRepository){}

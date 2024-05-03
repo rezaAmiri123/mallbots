@@ -36,6 +36,28 @@ func (s serverTx) StartBasket(ctx context.Context, request *basketspb.StartBaske
 	return next.StartBasket(ctx, request)
 }
 
+func (s serverTx) CheckoutBasket(ctx context.Context, request *basketspb.CheckoutBasketRequest) (resp *basketspb.CheckoutBasketResponse, err error) {
+	ctx = s.c.Scoped(ctx)
+	defer func(tx *sql.Tx) {
+		err = s.closeTx(tx, err)
+	}(di.Get(ctx, constants.DatabaseTxKey).(*sql.Tx))
+
+	next := server{app: di.Get(ctx, constants.ApplicationTxKey).(application.App)}
+
+	return next.CheckoutBasket(ctx, request)
+}
+
+func (s serverTx) AddItem(ctx context.Context, request *basketspb.AddItemRequest) (resp *basketspb.AddItemResponse, err error) {
+	ctx = s.c.Scoped(ctx)
+	defer func(tx *sql.Tx) {
+		err = s.closeTx(tx, err)
+	}(di.Get(ctx, constants.DatabaseTxKey).(*sql.Tx))
+
+	next := server{app: di.Get(ctx, constants.ApplicationTxKey).(application.App)}
+
+	return next.AddItem(ctx, request)
+}
+
 func (s serverTx) closeTx(tx *sql.Tx, err error) error {
 	if p := recover(); p != nil {
 		_ = tx.Rollback()

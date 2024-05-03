@@ -16,6 +16,7 @@ import (
 	"github.com/rezaAmiri123/mallbots/internal/config"
 	"github.com/rezaAmiri123/mallbots/internal/web"
 	"github.com/rezaAmiri123/mallbots/migrations"
+	"github.com/rezaAmiri123/mallbots/ordering"
 	"github.com/rezaAmiri123/mallbots/stores"
 )
 
@@ -55,7 +56,7 @@ func run() (err error) {
 			&customers.Module{},
 			// &depot.Module{},
 			// &notifications.Module{},
-			// &ordering.Module{},
+			&ordering.Module{},
 			// &payments.Module{},
 			&stores.Module{},
 			// &cosec.Module{},

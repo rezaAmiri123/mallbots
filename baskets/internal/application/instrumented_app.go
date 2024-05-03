@@ -8,15 +8,17 @@ import (
 
 type instrumentedApp struct {
 	App
-	basketsStarted prometheus.Counter
+	basketsStarted    prometheus.Counter
+	basketsCheckedOut prometheus.Counter
 }
 
 var _ App = (*instrumentedApp)(nil)
 
-func NewInstrumentedApp(app App, basketsStarted prometheus.Counter) App {
+func NewInstrumentedApp(app App, basketsStarted prometheus.Counter, basketsCheckedOut prometheus.Counter) App {
 	return instrumentedApp{
-		App:            app,
-		basketsStarted: basketsStarted,
+		App:               app,
+		basketsStarted:    basketsStarted,
+		basketsCheckedOut: basketsCheckedOut,
 	}
 }
 
@@ -26,5 +28,14 @@ func (a instrumentedApp) StartBasket(ctx context.Context, start StartBasket) err
 		return err
 	}
 	a.basketsStarted.Inc()
+	return nil
+}
+
+func (a instrumentedApp) CheckoutBasket(ctx context.Context, checkout CheckoutBasket) error {
+	err := a.App.CheckoutBasket(ctx, checkout)
+	if err != nil {
+		return err
+	}
+	a.basketsCheckedOut.Inc()
 	return nil
 }

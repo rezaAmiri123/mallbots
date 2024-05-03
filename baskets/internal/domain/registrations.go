@@ -21,5 +21,16 @@ func RegistrationsWithSerde(serde registry.Serde) error {
 		return err
 	}
 
+	if err := serde.Register(BasketItemAdded{}); err != nil {
+		return err
+	}
+	if err := serde.Register(BasketCheckedOut{}); err != nil {
+		return err
+	}
+
+	// asket snapshots
+	if err := serde.RegisterKey(BasketV1{}.SnapshotName(), BasketV1{}); err != nil {
+		return err
+	}
 	return nil
 }
