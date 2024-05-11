@@ -1,0 +1,51 @@
+package constants
+
+// ServiceName The name of this module/service
+const ServiceName = "depot"
+
+// GRPC Service Names
+const (
+	StoresServiceName    = "STORES"
+	CustomersServiceName = "CUSTOMERS"
+)
+
+// Dependency Injection Keys
+const (
+	RegistryKey                 = "registry"
+	DomainDispatcherKey         = "domainDispatcher"
+	DatabaseTxKey               = "tx"
+	DatabaseKey                 = "database"
+	MessagePublisherKey         = "messagePublisher"
+	MessageSubscriberKey        = "messageSubscriber"
+	EventPublisherKey           = "eventPublisher"
+	CommandPublisherKey         = "commandPublisher"
+	ReplyPublisherKey           = "replyPublisher"
+	SagaStoreKey                = "sagaStore"
+	InboxStoreKey               = "inboxStore"
+	ApplicationTxKey            = "appTx"
+	ApplicationKey              = "app"
+	DomainEventHandlersKey      = "domainEventHandlers"
+	IntegrationEventHandlersKey = "integrationEventHandlers"
+	CommandHandlersKey          = "commandHandlers"
+	ReplyHandlersKey            = "replyHandlers"
+
+	ShoppingListsRepoTxKey = "shoppingListTxRepo"
+	ShoppingListsRepoKey = "shoppingListRepo"
+	StoresCacheRepoTxKey   = "storesCacheTxRepo"
+	StoresCacheRepoKey   = "storesCacheRepo"
+	ProductsCacheRepoTxKey = "productsCacheTxRepo"
+	ProductsCacheRepoKey = "productsCacheRepo"
+)
+
+// Repository Table Names
+const (
+	OutboxTableName    = ServiceName + ".outbox"
+	InboxTableName     = ServiceName + ".inbox"
+	EventsTableName    = ServiceName + ".events"
+	SnapshotsTableName = ServiceName + ".snapshots"
+	SagasTableName     = ServiceName + ".sagas"
+
+	ShoppingListsTableName = ServiceName + ".shopping_lists"
+	StoresCacheTableName   = ServiceName + ".stores_cache"
+	ProductsCacheTableName = ServiceName + ".products_cache"
+)
