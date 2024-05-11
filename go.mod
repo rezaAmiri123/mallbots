@@ -18,6 +18,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/nats-io/nats.go v1.34.0
+	github.com/pkg/errors v0.9.1
 	github.com/pressly/goose/v3 v3.19.2
 	github.com/prometheus/client_golang v1.19.0
 	github.com/rezaAmiri123/edatV2 v0.0.0-00010101000000-000000000000
@@ -77,7 +78,6 @@ require (
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/power-devops/perfstat v0.0.0-20210106213030-5aafc221ea8c // indirect
 	github.com/prometheus/client_model v0.5.0 // indirect
