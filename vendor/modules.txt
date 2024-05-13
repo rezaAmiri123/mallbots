@@ -288,6 +288,7 @@ github.com/rezaAmiri123/edatV2/postgres
 github.com/rezaAmiri123/edatV2/postgresotel
 github.com/rezaAmiri123/edatV2/registry
 github.com/rezaAmiri123/edatV2/registry/serdes
+github.com/rezaAmiri123/edatV2/sec
 github.com/rezaAmiri123/edatV2/stream/jetstream
 github.com/rezaAmiri123/edatV2/stream/jetstream/serializer
 github.com/rezaAmiri123/edatV2/tm
