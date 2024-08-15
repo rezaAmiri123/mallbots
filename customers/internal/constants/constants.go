@@ -13,21 +13,26 @@ const (
 const (
 	RegistryKey                 = "registry"
 	DomainDispatcherKey         = "domainDispatcher"
-	DatabaseTransactionKey      = "tx"
+	DatabaseTxKey               = "Tx"
+	DatabaseKey                 = "DB"
+	MessagePublisherTxKey       = "messagePublisherTx"
 	MessagePublisherKey         = "messagePublisher"
 	MessageSubscriberKey        = "messageSubscriber"
 	EventPublisherKey           = "eventPublisher"
 	CommandPublisherKey         = "commandPublisher"
+	ReplyPublisherTxKey         = "replyPublisherTx"
 	ReplyPublisherKey           = "replyPublisher"
 	SagaStoreKey                = "sagaStore"
 	InboxStoreKey               = "inboxStore"
+	ApplicationTxKey            = "appTx"
 	ApplicationKey              = "app"
 	DomainEventHandlersKey      = "domainEventHandlers"
 	IntegrationEventHandlersKey = "integrationEventHandlers"
 	CommandHandlersKey          = "commandHandlers"
 	ReplyHandlersKey            = "replyHandlers"
 
-	CustomersRepoKey = "customersRepo"
+	CustomersRepoTxKey = "customersRepoTx"
+	CustomersRepoKey   = "customersRepo"
 )
 
 // Repository Table Names

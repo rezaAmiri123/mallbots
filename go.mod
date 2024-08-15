@@ -2,7 +2,7 @@ module github.com/rezaAmiri123/mallbots
 
 go 1.21
 
-replace github.com/rezaAmiri123/edatV2 => github.com/rezaAmiri123/edatV2 v1.0.7
+replace github.com/rezaAmiri123/edatV2 => github.com/rezaAmiri123/edatV2 v1.0.9
 
 require (
 	github.com/docker/go-connections v0.5.0

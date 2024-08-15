@@ -18,9 +18,7 @@ const (
 	AuthorizeCustomerCommand = "customersapi.AuthorizeCustomer"
 )
 
-func Registrations(reg registry.Registry) error {
-	serde := serdes.NewProtoSerde(reg)
-
+func RegistrationsWithSerde(serde registry.Serde) error {
 	// Customer events
 	if err := serde.Register(&CustomerRegistered{}); err != nil {
 		return err
@@ -40,6 +38,10 @@ func Registrations(reg registry.Registry) error {
 		return err
 	}
 	return nil
+}
+
+func Registrations(reg registry.Registry) error {
+	return RegistrationsWithSerde(serdes.NewProtoSerde(reg))
 }
 
 func (*CustomerRegistered) Key() string { return CustomerRegisteredEvent }

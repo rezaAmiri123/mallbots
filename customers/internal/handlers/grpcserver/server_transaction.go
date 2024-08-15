@@ -29,7 +29,7 @@ func (s serverTx) RegisterCustomer(ctx context.Context, request *customerspb.Reg
 	ctx = s.c.Scoped(ctx)
 	defer func(tx *sql.Tx) {
 		err = s.closeTx(tx, err)
-	}(di.Get(ctx, constants.DatabaseTransactionKey).(*sql.Tx))
+	}(di.Get(ctx, constants.DatabaseTxKey).(*sql.Tx))
 
 	next := server{app: di.Get(ctx, constants.ApplicationKey).(application.App)}
 
@@ -40,7 +40,7 @@ func (s serverTx) AuthorizeCustomer(ctx context.Context, request *customerspb.Au
 	ctx = s.c.Scoped(ctx)
 	defer func(tx *sql.Tx) {
 		err = s.closeTx(tx, err)
-	}(di.Get(ctx, constants.DatabaseTransactionKey).(*sql.Tx))
+	}(di.Get(ctx, constants.DatabaseTxKey).(*sql.Tx))
 
 	next := server{app: di.Get(ctx, constants.ApplicationKey).(application.App)}
 
@@ -51,7 +51,7 @@ func (s serverTx) GetCustomer(ctx context.Context, request *customerspb.GetCusto
 	ctx = s.c.Scoped(ctx)
 	defer func(tx *sql.Tx) {
 		err = s.closeTx(tx, err)
-	}(di.Get(ctx, constants.DatabaseTransactionKey).(*sql.Tx))
+	}(di.Get(ctx, constants.DatabaseTxKey).(*sql.Tx))
 
 	next := server{app: di.Get(ctx, constants.ApplicationKey).(application.App)}
 
@@ -62,7 +62,7 @@ func (s serverTx) EnableCustomer(ctx context.Context, request *customerspb.Enabl
 	ctx = s.c.Scoped(ctx)
 	defer func(tx *sql.Tx) {
 		err = s.closeTx(tx, err)
-	}(di.Get(ctx, constants.DatabaseTransactionKey).(*sql.Tx))
+	}(di.Get(ctx, constants.DatabaseTxKey).(*sql.Tx))
 
 	next := server{app: di.Get(ctx, constants.ApplicationKey).(application.App)}
 
@@ -73,7 +73,7 @@ func (s serverTx) DisableCustomer(ctx context.Context, request *customerspb.Disa
 	ctx = s.c.Scoped(ctx)
 	defer func(tx *sql.Tx) {
 		err = s.closeTx(tx, err)
-	}(di.Get(ctx, constants.DatabaseTransactionKey).(*sql.Tx))
+	}(di.Get(ctx, constants.DatabaseTxKey).(*sql.Tx))
 
 	next := server{app: di.Get(ctx, constants.ApplicationKey).(application.App)}
 

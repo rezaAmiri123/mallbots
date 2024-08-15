@@ -6,10 +6,10 @@ import (
 
 	"github.com/rezaAmiri123/edatV2/am"
 	"github.com/rezaAmiri123/edatV2/di"
-	"github.com/rezaAmiri123/mallbots/customers/internal/constants"
+	"github.com/rezaAmiri123/mallbots/cosec/internal/constants"
 )
 
-func RegisterCommandHandlersTx(container di.Container) error {
+func RegisterReplyHandlersTx(container di.Container) error {
 	rawMsgHandler := am.MessageHandlerFunc(func(ctx context.Context, msg am.IncomingMessage) (err error) {
 		ctx = container.Scoped(ctx)
 		defer func(tx *sql.Tx) {
@@ -23,10 +23,10 @@ func RegisterCommandHandlersTx(container di.Container) error {
 			}
 		}(di.Get(ctx, constants.DatabaseTxKey).(*sql.Tx))
 
-		return di.Get(ctx, constants.CommandHandlersKey).(am.MessageHandler).HandleMessage(ctx, msg)
+		return di.Get(ctx, constants.ReplyHandlersKey).(am.MessageHandler).HandleMessage(ctx, msg)
 	})
 
 	subscriber := container.Get(constants.MessageSubscriberKey).(am.MessageSubscriber)
 
-	return RegisterCommandHandlers(subscriber, rawMsgHandler)
+	return RegisterReplyHandlers(subscriber, rawMsgHandler)
 }
